@@ -7,8 +7,8 @@ describe('random ball dropper', function()
         local dropper = Dropper(number_of_chutes)
 
         for i = 1, 10 do
-            local chute_in_which_ball_was_dropped = dropper.chute_in_which_ball_was_dropped()
-            assert.is_true(1 <= chute_in_which_ball_was_dropped and chute_in_which_ball_was_dropped <= 10)
+            local chutes_in_which_balls_are_dropped = dropper.chutes_in_which_balls_are_dropped()
+            assert.is_true(1 <= chutes_in_which_balls_are_dropped and chutes_in_which_balls_are_dropped <= 10)
         end
     end)
 
