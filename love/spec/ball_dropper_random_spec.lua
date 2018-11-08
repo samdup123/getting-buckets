@@ -13,15 +13,17 @@ describe('random ball dropper', function()
         end
     end)
 
-    it('should implement tock method but that should do nothing', function()
+    it('should stop dropping balls after a time', function()
         local number_of_chutes = 10
         local number_of_balls_to_drop = 30
         local dropper = Dropper(number_of_chutes, number_of_balls_to_drop)
 
         for i = 1, number_of_balls_to_drop do
+            assert.is_false(dropper.done())
             dropper.tock()
         end
 
+        assert.is_true(dropper.done())
         assert.is.same({}, dropper.tock())
     end)
 end)

@@ -22,7 +22,6 @@ function love.load()
 
     function tock()
         local new_ball = ball_dropper.tock()
-        print('tocking')
         chutes.tock(new_ball)
     end
 
