@@ -11,34 +11,50 @@ return function(number_of_chutes, starting_chute)
     end
     clear_balls_in_play()
 
-    return {
-        tock = function(balls_in_play)
-            clear_balls_in_play()
-            for _,ball in ipairs(balls_in_play) do
-                balls_in_play[ball.chute] = is_there_a_ball_in_the_chute
+    local a_move_has_happened_since_a_tock = false
+
+    local controller = {
+        move_left = function()
+            if not a_move_has_happened_since_a_tock then
+                a_move_has_happened_since_a_tock = true
+                if starting_chute == 1 then
+                    error('can not move left from the first chute')
+                else
+                    current_chute = current_chute - 1
+                end
+            else
+                error('can not move twice between tocks')
             end
+        end,
+        move_right = function()
+            if not a_move_has_happened_since_a_tock then
+                a_move_has_happened_since_a_tock = true
+                if starting_chute == number_of_chutes then
+                    error('can not move right from last chute')
+                else
+                    current_chute = current_chute + 1
+                end
+            else
+                error('can not move twice betwee tocks')
+            end
+        end,
+        ball_in_chute = function()
+            return balls_in_play[current_chute]
+        end
+    }
+
+    return {
+        tock = function(balls)
+            clear_balls_in_play()
+            for _,ball in ipairs(balls or {}) do
+                balls_in_play[ball.chute] = true
+            end
+
+            a_move_has_happened_since_a_tock = false
             return current_chute
         end,
         controller = function() 
-            return {
-                move_left = function()
-                    if starting_chute == 1 then
-                        error('can not move left from the first chute')
-                    else
-                        current_chute = current_chute - 1
-                    end
-                end,
-                move_right = function()
-                    if starting_chute == number_of_chutes then
-                        error('can not move right from last chute')
-                    else
-                        current_chute = current_chute + 1
-                    end
-                end,
-                is_there_a_ball_in_the_chute = function()
-                    return balls_in_play[current_chute]
-                end
-            }
+            return controller
         end
     }
 end
