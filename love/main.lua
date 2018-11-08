@@ -7,9 +7,10 @@ local Ball_Dropper = require'ball_dropper_random'
 function love.load()
     num_chutes = 10
     length_of_chutes = 10
+    number_of_balls_that_will_fall = 30
 
     chutes = Chutes(num_chutes, length_of_chutes)
-    ball_dropper = Ball_Dropper(num_chutes)
+    ball_dropper = Ball_Dropper(num_chutes, number_of_balls_that_will_fall)
 
     width_of_chute = 50
     distance_unit = width_of_chute
@@ -19,17 +20,9 @@ function love.load()
     bucket_location = 1
     balls_that_fell_in_trough = 0
 
-    number_of_balls_that_will_fall = 30
-    fallen_balls = 0
-
     function tock()
+        local new_ball = ball_dropper.tock()
         print('tocking')
-        local new_ball = {}
-        if fallen_balls ~= number_of_balls_that_will_fall then
-            print('inserting a new ball')
-            table.insert(new_ball, ball_dropper.chutes_in_which_balls_are_dropped())
-            fallen_balls = fallen_balls + 1
-        end
         chutes.tock(new_ball)
     end
 

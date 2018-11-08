@@ -16,6 +16,17 @@ describe('chutes', function()
         local chutes = Chutes(number_of_chutes, length_of_chutes)
 
         local chute_to_drop_ball = 8
+        chutes.tock(chute_to_drop_ball)
+
+        assert.is.same({{chute = chute_to_drop_ball, location = 1}}, chutes.balls_in_play())
+    end)
+
+    it('should allow a ball to be dropped from a tock (when the ball is dropped from a table', function()
+        local number_of_chutes = 10
+        local length_of_chutes = 10
+        local chutes = Chutes(number_of_chutes, length_of_chutes)
+
+        local chute_to_drop_ball = 8
         local dropped_balls_in_chute = {chute_to_drop_ball}
         chutes.tock(dropped_balls_in_chute)
 
