@@ -14,17 +14,18 @@ return function(number_of_chutes, starting_chute)
     local a_move_has_happened_since_a_tock = false
 
     local function move(direction)
-        if not a_move_has_happened_since_a_tock then
-            a_move_has_happened_since_a_tock = true
-            if starting_chute == 1 and direction == 'left' then
-                error('can not move left from the first chute')
-            elseif starting_chute == number_of_chutes and direction == 'right' then
-                error('can not move right from the last chute')
-            else
-                current_chute = current_chute + ((direction == 'left') and -1 or 1)
-            end
+        if a_move_has_happened_since_a_tock then
+            error('can not move twice between time units')
+            return
+        end
+
+        a_move_has_happened_since_a_tock = true
+        if starting_chute == 1 and direction == 'left' then
+            error('can not move left from the first chute')
+        elseif starting_chute == number_of_chutes and direction == 'right' then
+            error('can not move right from the last chute')
         else
-            error('can not move twice between tocks')
+            current_chute = current_chute + ((direction == 'left') and -1 or 1)
         end
     end
 
@@ -36,8 +37,13 @@ return function(number_of_chutes, starting_chute)
             move('right')
         end,
         ball_in_chute = function()
-            return balls_in_play[current_chute]
-        end
+            if a_move_has_happened_since_a_tock then 
+                error('you can not know if a ball in in the chute until a time unit passes after a move')
+            else
+                return balls_in_play[current_chute]
+            end
+        end,
+        current_chute = function() return current_chute end
     }
 
     return {

@@ -48,6 +48,17 @@ describe('bucket', function()
         assert.has.errors(function() controller.move_right() end)
     end)
 
+    it('should offer current position to the controller', function()
+        local number_of_chutes = 10
+        local starting_chute = 4
+        local bucket = Bucket(number_of_chutes, starting_chute)
+        local controller = bucket.controller()
+
+        assert.is.equal(starting_chute, controller.current_chute())
+        controller.move_right()
+        assert.is.equal(starting_chute + 1, controller.current_chute())
+    end)
+
     it('should have singleton controller', function()
         local number_of_chutes = 10
         local starting_chute = 10
@@ -70,7 +81,7 @@ describe('bucket', function()
         assert.has.errors(function() controller.move_left() end)
     end)
 
-    it('should correctly report whether or not a ball is in the chute it is under to the controller', function()
+    it('should correctly report whether or not a ball is in the chute it is under', function()
         local number_of_chutes = 10
         local starting_chute = 8
         local bucket = Bucket(number_of_chutes, starting_chute)
@@ -80,5 +91,19 @@ describe('bucket', function()
         local controller = bucket.controller()
         assert.is.equal(true, controller.ball_in_chute())
 
+        controller.move_left()
+        bucket.tock({{chute = starting_chute}})
+        assert.is.equal(false, controller.ball_in_chute())
+    end)
+
+    it('should not allow the controller to move and then check if a ball is in the chute in the same tock', function()
+        local number_of_chutes = 10
+        local starting_chute = 8
+        local bucket = Bucket(number_of_chutes, starting_chute)
+
+        local controller = bucket.controller()
+
+        controller.move_left()
+        assert.has.errors(function() controller.ball_in_chute() end)
     end)
 end)
