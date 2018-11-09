@@ -17,30 +17,39 @@ function love.load()
     local ball_dropper = Ball_Dropper(num_chutes, number_of_balls_that_will_fall, tocks_between_drops)
     local bucket = Bucket(num_chutes, starting_chute)
 
-    local bucket_location = 1
     local balls_that_fell_in_trough = 0
     
-    
-    function ball_exits(chute_num)
-        if not chute_num == bucket_location then
-            balls_that_fell_in_trough = balls_that_fell_in_trough + 1
-        end
+    local bucket_position = starting_chute
+    local balls_in_play, balls_exiting = {}, {}
+
+    function bucket_is_under(chute_num)
+        return chute_num == bucket_position
     end
-    
-    function balls_in_play()
-        return chutes.balls_in_play()
-    end
-    
-    bucket_position = starting_chute
+
     function tock()
         local new_ball = ball_dropper.tock()
-        chutes.tock(new_ball)
+        balls_in_play, balls_exiting = chutes.tock(new_ball)
+        bucket_position = bucket.tock(balls_in_play)
+
+        for _,chute_in_which_ball_exits in ipairs(balls_exiting) do
+            if not bucket_is_under(chute_in_which_ball_exits) then
+                balls_that_fell_in_trough = balls_that_fell_in_trough + 1
+            end
+        end
+    end
+
+    function get_balls_in_play()
+        return balls_in_play
+    end
+
+    function get_bucket_position()
+        return bucket_position
     end
 
     width_of_chute = 50
     distance_unit = width_of_chute
     chute_rect = {start_x = 10, start_y = 10, width = width_of_chute * num_chutes, height = distance_unit * length_of_chutes}
-    bucket_rect = {width = width_of_chute, height = distance_unit}
+    bucket_rect = {start_y = chute_rect.start_y + chute_rect.height, width = width_of_chute, height = distance_unit}
     ball = {radius = width_of_chute / 2}
     time = 0
 end
@@ -71,10 +80,20 @@ function love.draw()
     
     draw_rectangle('fill', chute_rect)
 
-    local balls = balls_in_play()
+    local balls = get_balls_in_play()
 
     love.graphics.setColor(1,1,1)
     for _,ball in ipairs(balls) do
         draw_ball(ball.chute, ball.location)
     end
+
+    local bucket_position = get_bucket_position()
+
+    love.graphics.rectangle(
+        'fill', 
+        chute_rect.start_x + (bucket_position * width_of_chute), 
+        bucket_rect.start_y, 
+        bucket_rect.width, 
+        bucket_rect.height
+    )
 end
