@@ -20,6 +20,19 @@ describe('random ball dropper', function()
         end
     end)
 
+    it('should have a default tocks between drops of 0', function()
+        local number_of_chutes = 10
+        local number_of_balls_to_drop = 30
+        local dropper = Dropper(number_of_chutes, number_of_balls_to_drop)
+        
+        
+        for i = 1, (number_of_balls_to_drop // 2) do
+            local chute_in_which_ball_is_dropped = dropper.tock()
+            assert.is_true(1 <= chute_in_which_ball_is_dropped and chute_in_which_ball_is_dropped <= number_of_chutes)
+        end
+    end)
+
+
     it('should stop dropping balls after a time', function()
         local number_of_chutes = 10
         local number_of_balls_to_drop = 30

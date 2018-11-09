@@ -1,4 +1,5 @@
 return function(number_of_chutes, number_of_balls_to_drop, tocks_between_drops)
+    tocks_between_drops = tocks_between_drops or 0
     local num_dropped = 0
     local done_dropping = false
     local tocks_since_last_drop = tocks_between_drops
