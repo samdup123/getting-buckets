@@ -11,18 +11,20 @@ return function(number_of_chutes, length_of_chutes)
         table.insert(chutes, chute)
     end
 
-    return {
-        balls_in_play = function()
-            local balls = {}
-            for chute_num,chute in ipairs(chutes) do
-                for location_num,location in ipairs(chute) do
-                    if location then 
-                        table.insert(balls, {chute = chute_num, location = location_num})
-                    end 
-                end
+    local function balls_in_play()
+        local balls = {}
+
+        for chute_num,chute in ipairs(chutes) do
+            for location_num,location in ipairs(chute) do
+                if location then 
+                    table.insert(balls, {chute = chute_num, location = location_num})
+                end 
             end
-            return balls
-        end,
+        end
+        return balls
+    end
+
+    return {
         tock = function(entering_chutes)
             if type(entering_chutes) ~= 'table' then entering_chutes = {entering_chutes} end
             leaving_chutes = {}
@@ -40,9 +42,8 @@ return function(number_of_chutes, length_of_chutes)
             for _,chute_in_which_a_ball_was_dropped in ipairs(entering_chutes or {}) do
                 (chutes[chute_in_which_a_ball_was_dropped] or {})[1] = true
             end
-        end,
-        balls_exiting = function()
-            return leaving_chutes
+
+            return balls_in_play(), leaving_chutes
         end
     }
 end
