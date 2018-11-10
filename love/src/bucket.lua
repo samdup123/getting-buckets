@@ -20,9 +20,9 @@ return function(number_of_chutes, starting_chute)
         end
 
         a_move_has_happened_since_a_tock = true
-        if starting_chute == 1 and direction == 'left' then
+        if current_chute == 1 and direction == 'left' then
             error('can not move left from the first chute')
-        elseif starting_chute == number_of_chutes and direction == 'right' then
+        elseif current_chute == number_of_chutes and direction == 'right' then
             error('can not move right from the last chute')
         else
             current_chute = current_chute + ((direction == 'left') and -1 or 1)
@@ -43,7 +43,8 @@ return function(number_of_chutes, starting_chute)
                 return balls_in_play[current_chute]
             end
         end,
-        current_chute = function() return current_chute end
+        current_chute = function() return current_chute end,
+        number_of_chutes = function() return number_of_chutes end
     }
 
     return {

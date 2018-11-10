@@ -59,6 +59,15 @@ describe('bucket', function()
         assert.is.equal(starting_chute + 1, controller.current_chute())
     end)
 
+    it('should offer number of chutes to the controller', function()
+        local number_of_chutes = 10
+        local starting_chute = 4
+        local bucket = Bucket(number_of_chutes, starting_chute)
+        local controller = bucket.controller()
+
+        assert.is.equal(number_of_chutes, controller.number_of_chutes())
+    end)
+
     it('should have singleton controller', function()
         local number_of_chutes = 10
         local starting_chute = 10
