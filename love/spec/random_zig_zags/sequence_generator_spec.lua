@@ -16,7 +16,7 @@ describe('zig zag sequence generator', function()
         )
 
         local expected_gantt = {
-            1, 2, 3, '', 2, 1, '', 2, 3, '', 2, 1, ''
+            1, 2, 3, '', 2, 1, '', 2, 3, '', 2, 1
         --  1, 2, 3,     4, 5,     6, 7,     8, 9
         }
 
@@ -38,7 +38,7 @@ describe('zig zag sequence generator', function()
         )
 
         local expected_gantt = {
-            1, 2, 3, 4, '', 3, 2, '', 3, 4, 5, 6, ''
+            1, 2, 3, 4, '', 3, 2, '', 3, 4, 5, 6
         --  1, 2, 3, 4,     5, 6,     7, 8, 9, 10
         }
 
@@ -60,7 +60,7 @@ describe('zig zag sequence generator', function()
         )
 
         local expected_gantt = {
-            3, 4, 5, 6, 7, 8, ''
+            3, 4, 5, 6, 7, 8
         --  1, 2, 3, 4, 5, 6
         }
 
@@ -82,7 +82,7 @@ describe('zig zag sequence generator', function()
         )
 
         local expected_gantt = {
-            3, 4, 5, 6, '', 5, 4, ''
+            3, 4, 5, 6, '', 5, 4
         --  1, 2, 3, 4,     5, 6
         }
 
@@ -104,7 +104,7 @@ describe('zig zag sequence generator', function()
         )
 
         local expected_gantt = {
-            7, 8, 9, 10, 9, 8, ''
+            7, 8, 9, 10, 9, 8
         --  1, 2, 3, 4,  5, 6,
         }
 

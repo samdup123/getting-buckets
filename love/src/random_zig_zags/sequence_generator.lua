@@ -29,7 +29,7 @@ return function(total_number_of_chutes, number_of_balls_to_drop, starting_chute,
     end
     
     local last_spot_dropped = starting_chute
-    for _,run in ipairs(running_change_points) do
+    for run_index,run in ipairs(running_change_points) do
         
         for _ = 1,run do
             
@@ -41,6 +41,9 @@ return function(total_number_of_chutes, number_of_balls_to_drop, starting_chute,
                    end
                 last_spot_dropped = last_spot_dropped + step
             end
+        end
+        if run_index == #running_change_points then
+            break
         end
         table.insert(gantt, '')
         step = -step
