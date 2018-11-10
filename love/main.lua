@@ -8,10 +8,10 @@ local Bucket = require'bucket'
 local player_function = require'player'
 
 function love.load()
-    local num_chutes = 8
+    num_chutes = 9
     local length_of_chutes = 16
-    local number_of_balls_that_will_fall = 30
-    local tocks_between_drops = 20
+    local number_of_balls_that_will_fall = 100
+    local tocks_between_drops = 16
     local starting_chute = 1
 
     local chutes = Chutes(num_chutes, length_of_chutes)
@@ -19,7 +19,7 @@ function love.load()
     local bucket = Bucket(num_chutes, starting_chute)
     local controller = bucket.controller()
 
-    local balls_that_fell_in_trough = 0
+    local balls_that_fell_through = 0
     
     local bucket_position = starting_chute
     local balls_in_play, balls_exiting = {}, {}
@@ -44,7 +44,7 @@ function love.load()
 
         for _,chute_in_which_ball_exits in ipairs(balls_exiting) do
             if not bucket_is_under(chute_in_which_ball_exits) then
-                balls_that_fell_in_trough = balls_that_fell_in_trough + 1
+                balls_that_fell_through = balls_that_fell_through + 1
             end
         end
     end
@@ -57,6 +57,10 @@ function love.load()
         return bucket_position
     end
 
+    function get_balls_that_fell_through()
+        return balls_that_fell_through
+    end
+
     width_of_chute = 35
     distance_unit = width_of_chute
     chute_rect = {start_x = 10, start_y = 10, width = width_of_chute * num_chutes, height = distance_unit * length_of_chutes}
@@ -67,7 +71,7 @@ end
 
 function love.update(dt)
     time = time + dt
-    if time > .09 then
+    if time > .01 then
         time = 0
         tock()
     end
@@ -107,4 +111,9 @@ function love.draw()
         bucket_rect.width, 
         bucket_rect.height
     )
+
+    --show balls that fell through
+    for i = 1, get_balls_that_fell_through() do
+        draw_ball(num_chutes + 1, i)
+    end
 end
