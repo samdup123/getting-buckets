@@ -6,7 +6,6 @@ return function(number_of_chutes, number_of_balls_to_drop, tocks_between_drops)
 
     return {
         tock = function()
-            
             local enough_tocks_passed = tocks_since_last_drop == tocks_between_drops
             local still_dropping = not done_dropping
 

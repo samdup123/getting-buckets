@@ -1,0 +1,3 @@
+return {
+    tock = function() end
+}
