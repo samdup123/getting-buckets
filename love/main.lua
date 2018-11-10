@@ -10,8 +10,8 @@ local player_function = require'player'
 function love.load()
     num_chutes = 9
     local length_of_chutes = 16
-    local number_of_balls_that_will_fall = 100
-    local tocks_between_drops = 16
+    local number_of_balls_that_will_fall = 400
+    local tocks_between_drops = 15
     local starting_chute = 1
 
     local chutes = Chutes(num_chutes, length_of_chutes)
@@ -71,7 +71,7 @@ end
 
 function love.update(dt)
     time = time + dt
-    if time > .01 then
+    if time > .006 then
         time = 0
         tock()
     end
