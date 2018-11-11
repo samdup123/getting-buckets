@@ -59,6 +59,7 @@ return function(number_of_chutes, starting_chute)
         end,
         controller = function() 
             return controller
-        end
+        end,
+        initial_position = function() return starting_chute end
     }
 end

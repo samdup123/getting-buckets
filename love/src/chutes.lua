@@ -1,7 +1,6 @@
 return function(number_of_chutes, length_of_chutes)
 
     local chutes = {}
-    local leaving_chutes = {}
 
     for i = 1,number_of_chutes do 
         local chute = {}
@@ -27,7 +26,7 @@ return function(number_of_chutes, length_of_chutes)
     return {
         tock = function(entering_chutes)
             if type(entering_chutes) ~= 'table' then entering_chutes = {entering_chutes} end
-            leaving_chutes = {}
+            local leaving_chutes = {}
             for chute = 1,number_of_chutes do
                 if chutes[chute][length_of_chutes] then
                     table.insert(leaving_chutes, chute)

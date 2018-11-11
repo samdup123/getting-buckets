@@ -1,6 +1,13 @@
 describe('bucket', function()
     local Bucket = require'bucket'
 
+    it('should return initial position until time is passed', function()
+        local number_of_chutes = 10
+        local starting_chute = 4
+        local bucket = Bucket(number_of_chutes, starting_chute)
+        assert.is.equal(starting_chute, bucket.initial_position())
+    end)
+
     it('should return current position on a tock', function()
         local number_of_chutes = 10
         local starting_chute = 4

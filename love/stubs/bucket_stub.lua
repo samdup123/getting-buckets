@@ -10,5 +10,6 @@ return {
     tock = function() end,
     controller = function() 
         return controller_mock
-    end
+    end,
+    initial_position = function() end
 }
