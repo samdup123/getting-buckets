@@ -43,6 +43,11 @@ return function(number_of_chutes, length_of_chutes)
             end
 
             return balls_in_play(), leaving_chutes
+        end,
+        info = function() return {
+            number_of_chutes = number_of_chutes,
+            length_of_chutes = length_of_chutes
+        }
         end
     }
 end

@@ -11,7 +11,7 @@ local game_player = require'game_player'
 function love.load()
     num_chutes = 9
     local length_of_chutes = 16
-    local number_of_balls_that_will_fall = 8
+    local number_of_balls_that_will_fall = 75
     local tocks_between_drops = 15
     local starting_chute = 1
 
@@ -34,7 +34,7 @@ function love.load()
     end
 
     game_history, player_won = game_player(ball_dropper, chutes, bucket, run_user_code)
-    print('game player ran', game_history, game_history[1])
+    print('game player ran', game_history, player_won and "player won!" or "player lost!")
 
     width_of_chute = 35
     distance_unit = width_of_chute
@@ -48,8 +48,9 @@ end
 
 function love.update(dt)
     time = time + dt
-    if time > .6 then
+    if time > .03 then
         time = 0
+        game_time_state = game_time_state + 1
     end
 end
 
@@ -88,31 +89,5 @@ function love.draw()
             bucket_rect.width, 
             bucket_rect.height
         )
-    
-        game_time_state = game_time_state + 1
-
-        print('drawing', game_time_state, #game_history)
     end
-
-    -- local balls = get_balls_in_play()
-
-    -- love.graphics.setColor(1,1,1)
-    -- for _,ball in ipairs(balls) do
-    --     draw_ball(ball.chute, ball.location)
-    -- end
-
-    -- local bucket_position = get_bucket_position()
-
-    -- love.graphics.rectangle(
-    --     'fill', 
-    --     chute_rect.start_x + ((bucket_position - 1) * width_of_chute), 
-    --     bucket_rect.start_y, 
-    --     bucket_rect.width, 
-    --     bucket_rect.height
-    -- )
-
-    -- --show balls that fell through
-    -- for i = 1, get_balls_that_fell_through() do
-    --     draw_ball(num_chutes + 1, i)
-    -- end
 end

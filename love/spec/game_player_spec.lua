@@ -10,8 +10,9 @@ describe('game player', function()
         local ball_drop_gantt = 
             {{1,3}, {}, {}, 2, 2, {}, {}, {1,2}}
         local ball_dropper = BallDropper(ball_drop_gantt)
-        local chutes = Chutes(10, 2)
-        local bucket = Bucket(10, 1)
+        local number_of_chutes, length_of_chutes = 10, 2
+        local chutes = Chutes(number_of_chutes, length_of_chutes)
+        local bucket = Bucket(number_of_chutes, 1)
 
         local user_code_gantt = 
         {'r', 'l', 'r', 'r'}
@@ -22,7 +23,10 @@ describe('game player', function()
             coroutine.resume(user_code_coroutine)
         end
 
-        history, player_won_game = GamePlayer(ball_dropper, chutes, bucket, run_user_code)
+        history, board_info, player_won_game = GamePlayer(ball_dropper, chutes, bucket, run_user_code)
+
+        assert.are.equal(number_of_chutes, board_info.number_of_chutes)
+        assert.are.equal(length_of_chutes, board_info.length_of_chutes)
 
         local expected_bucket_positions = {1, 2, 1, 2, 3, 3, 3, 3, 3, 3}
         local expected_chute_snapshots = {

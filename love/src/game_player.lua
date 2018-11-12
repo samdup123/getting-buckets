@@ -29,11 +29,6 @@ return function(ball_dropper, chutes, bucket, run_user_code)
             lost_balls = lost_balls
         })
 
-        print('end game stuff', #balls_in_play, #balls_exiting, ball_dropper.done(), #history)
-        if (#balls_in_play == 0 and ball_dropper.done()) then
-             print(debug.traceback())
-        end
-
         return (#balls_in_play == 0 and ball_dropper.done())
     end
 
@@ -41,8 +36,7 @@ return function(ball_dropper, chutes, bucket, run_user_code)
 
     while not done_playing do
         done_playing = tock()
-        print('done playing', done_playing)
     end
 
-    return history, player_won_game
+    return history, chutes.info(), player_won_game
 end

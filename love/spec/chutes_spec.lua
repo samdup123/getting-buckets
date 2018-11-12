@@ -2,6 +2,17 @@ describe('chutes', function()
 
     local Chutes = require'chutes'
 
+    it('should know how many chutes it has and how long they are', function()
+        local number_of_chutes = 10
+        local length_of_chutes = 10
+        local chutes = Chutes(number_of_chutes, length_of_chutes)
+
+        assert.is.same({
+                number_of_chutes = number_of_chutes,
+                length_of_chutes = length_of_chutes
+            }, chutes.info())
+    end)
+
     it('should return no balls to begin with', function()
         local number_of_chutes = 10
         local length_of_chutes = 10
