@@ -16,6 +16,7 @@ return function(controller, gantt)
         
         if i <= #gantt then
             move(gantt[i])
+            i = i + 1
         end
 
         coroutine.yield()

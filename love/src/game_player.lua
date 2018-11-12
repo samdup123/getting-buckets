@@ -32,7 +32,6 @@ return function(ball_dropper, chutes, bucket, run_user_code)
         return (#balls_in_play == 0 and ball_dropper.done())
     end
 
-    table.insert(history, {bucket_position = bucket.initial_position()})
     local done_playing = false
 
     while not done_playing do
