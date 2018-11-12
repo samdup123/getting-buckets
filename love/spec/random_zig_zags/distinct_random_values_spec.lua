@@ -14,7 +14,7 @@ describe('distinct random values', function()
 
     local function assert_values_are_in_range(vals, min, max)
         for _,val in ipairs(vals) do
-            assert.is_true(min <= val and val >= max)
+            assert.is_true(min <= val and val <= max)
         end
     end
 
@@ -23,15 +23,15 @@ describe('distinct random values', function()
         local vals = func(start, _end, count, diff)
         
         assert_values_are_far_enough_apart(vals, diff)
-        assert_values_are_in_range(1, 50)
+        assert_values_are_in_range(vals, start, _end)
     end)
 
     it('should work for 50 to 100', function()
-        local start, _end, count, diff = 1, 50, 4, 3
+        local start, _end, count, diff = 50, 100, 4, 3
         local vals = func(start, _end, count, diff)
         
         assert_values_are_far_enough_apart(vals, diff)
-        assert_values_are_in_range(50, 100)
+        assert_values_are_in_range(vals, start, _end)
     end)
 
     it('should have a default diff of 1', function()
