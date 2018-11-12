@@ -50,7 +50,6 @@ function love.update(dt)
     time = time + dt
     if time > .6 then
         time = 0
-        tock()
     end
 end
 
@@ -92,7 +91,7 @@ function love.draw()
     
         game_time_state = game_time_state + 1
 
-        print('drawing', game_time_state)
+        print('drawing', game_time_state, #game_history)
     end
 
     -- local balls = get_balls_in_play()
