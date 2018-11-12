@@ -28,7 +28,7 @@ return function(ball_dropper, chutes, bucket, run_user_code)
             bucket_position = bucket_position,
             lost_balls = lost_balls
         })
-
+        
         return (#balls_in_play == 0 and ball_dropper.done())
     end
 
