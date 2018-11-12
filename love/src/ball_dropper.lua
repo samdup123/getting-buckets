@@ -6,10 +6,14 @@ return function(gantt)
         tock = function()
             local droppings = gantt[i]
             if droppings == nil then
-                done_dropping = true
                 return {}
             else
                 i = i + 1
+
+                if i == #gantt + 1 then
+                    done_dropping = true
+                end
+
                 return droppings
             end
         end,

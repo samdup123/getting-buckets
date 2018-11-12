@@ -30,7 +30,6 @@ describe('random ball dropper', function()
         end
     end)
 
-
     it('should stop dropping balls after a time', function()
         local number_of_chutes = 10
         local number_of_balls_to_drop = 30

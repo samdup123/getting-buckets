@@ -16,7 +16,7 @@ return function(number_of_chutes, number_of_balls_to_drop, tocks_between_drops)
         end
     end
 
-    for _,thing in ipairs(gantt) do print(thing) end
+    -- for _,thing in ipairs(gantt) do print(thing) end
 
     return ball_dropper(gantt)
 end
