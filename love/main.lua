@@ -6,11 +6,12 @@ local Chutes = require'chutes'
 local Ball_Dropper = require'ball_dropper_random'
 local Bucket = require'bucket'
 local player_function = require'player'
+local game_player = require'game_player'
 
 function love.load()
     num_chutes = 9
     local length_of_chutes = 16
-    local number_of_balls_that_will_fall = 400
+    local number_of_balls_that_will_fall = 8
     local tocks_between_drops = 15
     local starting_chute = 1
 
@@ -19,47 +20,21 @@ function love.load()
     local bucket = Bucket(num_chutes, starting_chute)
     local controller = bucket.controller()
 
-    local balls_that_fell_through = 0
-    
-    local bucket_position = starting_chute
-    local balls_in_play, balls_exiting = {}, {}
-
-    local player = coroutine.create(player_function)
-    local status, err = coroutine.resume(player, controller)
-    if not status then print(err) end
-    function play()
-        status, err = coroutine.resume(player)
-        if not status then print(err) end
-    end
-
-    function bucket_is_under(chute_num)
-        return chute_num == bucket_position
-    end
-
-    function tock()
-        local new_ball = ball_dropper.tock()
-        balls_in_play, balls_exiting = chutes.tock(new_ball)
-        bucket_position = bucket.tock(balls_in_play)
-        play()
-
-        for _,chute_in_which_ball_exits in ipairs(balls_exiting) do
-            if not bucket_is_under(chute_in_which_ball_exits) then
-                balls_that_fell_through = balls_that_fell_through + 1
-            end
+    local player_coroutine = coroutine.create(player_function)
+    local status, err
+    local played_at_least_once = false
+    function run_user_code()
+        if not played_at_least_once then
+            status, err = coroutine.resume(player_coroutine, controller)
+        else
+            status, err = coroutine.resume(player_coroutine)
         end
+        if not status then print('ERROR!!!\n\t' .. err) end
+        played_at_least_once = true
     end
 
-    function get_balls_in_play()
-        return balls_in_play
-    end
-
-    function get_bucket_position()
-        return bucket_position
-    end
-
-    function get_balls_that_fell_through()
-        return balls_that_fell_through
-    end
+    game_history, player_won = game_player(ball_dropper, chutes, bucket, run_user_code)
+    print('game player ran', game_history, game_history[1])
 
     width_of_chute = 35
     distance_unit = width_of_chute
@@ -67,11 +42,13 @@ function love.load()
     bucket_rect = {start_y = chute_rect.start_y + chute_rect.height, width = width_of_chute, height = distance_unit}
     ball = {radius = width_of_chute / 2}
     time = 0
+
+    game_time_state = 1
 end
 
 function love.update(dt)
     time = time + dt
-    if time > .006 then
+    if time > .6 then
         time = 0
         tock()
     end
@@ -95,25 +72,48 @@ function love.draw()
     
     draw_rectangle('fill', chute_rect)
 
-    local balls = get_balls_in_play()
-
     love.graphics.setColor(1,1,1)
-    for _,ball in ipairs(balls) do
-        draw_ball(ball.chute, ball.location)
+
+    if game_time_state <= #game_history then
+        local moment = game_history[game_time_state]
+    
+        for _,ball in ipairs(moment.balls_in_play) do
+            draw_ball(ball.chute, ball.location)
+        end
+    
+        -- draw bucket
+        love.graphics.rectangle(
+            'fill', 
+            chute_rect.start_x + ((moment.bucket_position - 1) * width_of_chute), 
+            bucket_rect.start_y, 
+            bucket_rect.width, 
+            bucket_rect.height
+        )
+    
+        game_time_state = game_time_state + 1
+
+        print('drawing', game_time_state)
     end
 
-    local bucket_position = get_bucket_position()
+    -- local balls = get_balls_in_play()
 
-    love.graphics.rectangle(
-        'fill', 
-        chute_rect.start_x + ((bucket_position - 1) * width_of_chute), 
-        bucket_rect.start_y, 
-        bucket_rect.width, 
-        bucket_rect.height
-    )
+    -- love.graphics.setColor(1,1,1)
+    -- for _,ball in ipairs(balls) do
+    --     draw_ball(ball.chute, ball.location)
+    -- end
 
-    --show balls that fell through
-    for i = 1, get_balls_that_fell_through() do
-        draw_ball(num_chutes + 1, i)
-    end
+    -- local bucket_position = get_bucket_position()
+
+    -- love.graphics.rectangle(
+    --     'fill', 
+    --     chute_rect.start_x + ((bucket_position - 1) * width_of_chute), 
+    --     bucket_rect.start_y, 
+    --     bucket_rect.width, 
+    --     bucket_rect.height
+    -- )
+
+    -- --show balls that fell through
+    -- for i = 1, get_balls_that_fell_through() do
+    --     draw_ball(num_chutes + 1, i)
+    -- end
 end
