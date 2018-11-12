@@ -11,7 +11,7 @@ local game_player = require'game_player'
 function love.load()
     num_chutes = 9
     local length_of_chutes = 16
-    local number_of_balls_that_will_fall = 75
+    local number_of_balls_that_will_fall = 10000
     local tocks_between_drops = 15
     local starting_chute = 1
 

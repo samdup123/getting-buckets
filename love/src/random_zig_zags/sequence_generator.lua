@@ -1,10 +1,6 @@
-
-
 return function(total_number_of_chutes, number_of_balls_to_drop, starting_chute, first_direction, direction_change_points)
     direction_change_points = direction_change_points or {}
 
-    local balls_dropped = 0
-    
     local gantt = {}
 
     local step do
