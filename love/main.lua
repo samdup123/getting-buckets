@@ -3,7 +3,7 @@ package.path = './love/src/?.lua;' .. package.path
 
 math.randomseed(os.time())
 
-local level1 = require'levels/random'
+local level1 = require'levels/look'
 
 function love.load()
     game_history, game_info, player_won = level1()
