@@ -16,7 +16,8 @@ function love.load()
     local starting_chute = 1
 
     local chutes = Chutes(num_chutes, length_of_chutes)
-    local ball_dropper = Ball_Dropper(num_chutes, number_of_balls_that_will_fall, tocks_between_drops)
+    local random_func = function() return math.random(num_chutes) end
+    local ball_dropper = Ball_Dropper(random_func, num_chutes, number_of_balls_that_will_fall, tocks_between_drops)
     local bucket = Bucket(num_chutes, starting_chute)
     local controller = bucket.controller()
 

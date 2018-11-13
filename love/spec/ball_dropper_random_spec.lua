@@ -6,7 +6,12 @@ describe('random ball dropper', function()
         local number_of_chutes = 10
         local number_of_balls_to_drop = 30
         local tocks_between_drops = 4
-        local dropper = Dropper(number_of_chutes, number_of_balls_to_drop, tocks_between_drops)
+        local dropper = Dropper(
+            function() return math.random(number_of_chutes) end,
+            number_of_chutes,
+            number_of_balls_to_drop,
+            tocks_between_drops
+        )
         
         for i = 1, (number_of_balls_to_drop // 2) do
 
@@ -22,7 +27,11 @@ describe('random ball dropper', function()
     it('should have a default tocks between drops of 0', function()
         local number_of_chutes = 10
         local number_of_balls_to_drop = 30
-        local dropper = Dropper(number_of_chutes, number_of_balls_to_drop)
+        local dropper = Dropper(
+            function() return math.random(number_of_chutes) end,
+            number_of_chutes,
+            number_of_balls_to_drop
+        )
         
         for i = 1, (number_of_balls_to_drop // 2) do
             local chute_in_which_ball_is_dropped = dropper.tock()
@@ -34,7 +43,12 @@ describe('random ball dropper', function()
         local number_of_chutes = 10
         local number_of_balls_to_drop = 30
         local tocks_between_drops = 0
-        local dropper = Dropper(number_of_chutes, number_of_balls_to_drop, tocks_between_drops)
+        local dropper = Dropper(
+            function() return math.random(number_of_chutes) end,
+            number_of_chutes,
+            number_of_balls_to_drop,
+            tocks_between_drops
+        )
 
         for i = 1, number_of_balls_to_drop do
             assert.is_false(dropper.done())
