@@ -6,18 +6,12 @@ math.randomseed(os.time())
 local level1 = require'levels/random'
 
 function love.load()
-    num_chutes = 9
-    local length_of_chutes = 16
-    local number_of_balls_that_will_fall = 10
-    local tocks_between_drops = 15
-    local starting_chute = 1
-
-    game_history, player_won = level1(num_chutes, length_of_chutes, number_of_balls_that_will_fall, tocks_between_drops, starting_chute)
+    game_history, game_info, player_won = level1()
     print('game player ran', game_history, player_won and "player won!" or "player lost!")
 
     width_of_chute = 35
     distance_unit = width_of_chute
-    chute_rect = {start_x = 10, start_y = 10, width = width_of_chute * num_chutes, height = distance_unit * length_of_chutes}
+    chute_rect = {start_x = 10, start_y = 10, width = width_of_chute * game_info.number_of_chutes, height = distance_unit * game_info.length_of_chutes}
     bucket_rect = {start_y = chute_rect.start_y + chute_rect.height, width = width_of_chute, height = distance_unit}
     ball = {radius = width_of_chute / 2}
     time = 0
