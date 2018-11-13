@@ -2,8 +2,15 @@ describe('random number look', function()
     local Rand = require'random_number_look'
 
     it('should work', function()
-        local rand = Rand(10)
+        local old_math_random = math.random
+        local blah = 1
 
-        -- for i = 1, 15 do print(rand()) end
+        math.random = function() return blah end
+
+        local rand = Rand(10, 9)
+
+        for i = 1, 35 do rand() end
+
+        math.random = old_math_random
     end)
 end)
