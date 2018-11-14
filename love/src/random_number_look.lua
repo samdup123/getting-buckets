@@ -1,43 +1,27 @@
-return function(range_max, range)
+return function(range_max, range, random)
 
     local last_value
 
     return function()
         if last_value == nil then
-            last_value = math.random(range_max)
-            return last_value
+            last_value = random(range_max)
         else
             local one_less = last_value - 1
             local one_more = last_value + 1
 
             local min, max
 
-            print('last value', last_value, 'one less-one', one_less - 1, 'range_max - one_more', range_max - one_more)
-
-            if one_less - 1 > range_max - one_more then
-                print('one less won')
-
-                if one_less > range then
-                    print('top')
-                    print(one_less - range, one_less)
-                    last_value = math.random(one_less - range, one_less)
-                else
-                    print(one_less)
-                    last_value = math.random(one_less)
-                end
-                return last_value
+            if last_value == range_max then
+                last_value = random(2, one_less)
+            elseif last_value == 1 then
+                last_value = random(2, range_max - 1)
+            elseif one_less > range_max - one_more then
+                last_value = random(one_less)
             else
-                print('one more won', range_max - one_more, range)
-                if range_max - one_more > range then
-                    print('top')
-                    print(one_more, range_max - one_more)
-                    last_value = math.random(one_more, range_max - one_more)
-                else
-                    print(one_more, range_max   )
-                    last_value = math.random(one_more, range_max)
-                end
-                return last_value
+                last_value = random(one_more, range_max)
             end
         end
+
+        return last_value
     end
 end
