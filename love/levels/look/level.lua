@@ -13,7 +13,7 @@ return function()
     local starting_chute = 1
 
     local chutes = Chutes(number_of_chutes, length_of_chutes)
-    local random_func = LookRandom(number_of_chutes)
+    local random_func = LookRandom(number_of_chutes, number_of_chutes - 2, math.random)
     local ball_dropper = Ball_Dropper(random_func, number_of_chutes, number_of_balls_that_will_fall, tocks_between_drops)
     local bucket = Bucket(number_of_chutes, starting_chute)
     local controller = bucket.controller()
