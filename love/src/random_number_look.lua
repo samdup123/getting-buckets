@@ -1,5 +1,6 @@
 return function(range_max, range, random)
-
+    
+    local function minimum(a,b) return a < b and a or b end
     local last_value
 
     return function()
@@ -11,14 +12,14 @@ return function(range_max, range, random)
 
             local min, max
 
-            if last_value == range_max then
-                last_value = random(2, one_less)
-            elseif last_value == 1 then
-                last_value = random(2, range_max - 1)
-            elseif one_less > range_max - one_more then
-                last_value = random(one_less)
+            if one_less > range_max - one_more then
+                if one_less > range then
+                    last_value = random(one_less - range + 1, one_less)
+                else
+                    last_value = random(one_less)
+                end
             else
-                last_value = random(one_more, range_max)
+                last_value = random(one_more, minimum(one_more + range - 1, range_max))
             end
         end
 
