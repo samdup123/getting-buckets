@@ -15,18 +15,17 @@ return function(ball_dropper, chutes, bucket, run_user_code)
         bucket_position = bucket.tock(balls_in_play)
         run_user_code()
 
-        local lost_balls = {}
-        for _,chute_in_which_ball_exits in ipairs(balls_exiting) do
-            if not bucket_is_under(chute_in_which_ball_exits) then
-                table.insert(lost_balls, chute_in_which_ball_exits)
-                player_won_game = false
+        -- write test case for this? don't know how
+        for i = #balls_exiting, 1, -1 do
+            if balls_exiting[i] == bucket_position then
+                table.remove(balls_exiting, i)
             end
         end
 
         table.insert(history, {
             balls_in_play = balls_in_play,
             bucket_position = bucket_position,
-            lost_balls = lost_balls
+            lost_balls = balls_exiting
         })
 
         return (#balls_in_play == 0 and ball_dropper.done())

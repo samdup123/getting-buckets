@@ -100,7 +100,7 @@ describe('chutes', function()
         assert.is.same({}, balls_exiting)
     end)
 
-    it('should be able to move multiple balls down the sam chute and drop them at different times', function()
+    it('should be able to move multiple balls down the same chute and drop them at different times', function()
         local number_of_chutes = 10
         local length_of_chutes = 10
         local chutes = Chutes(number_of_chutes, length_of_chutes)

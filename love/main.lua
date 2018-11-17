@@ -3,10 +3,11 @@ package.path = './love/src/?.lua;' .. package.path
 
 math.randomseed(os.time())
 
-local level1 = require'levels/look'
+local player_code = require'levels/look/player'
+local level1 = require('levels/look/level')
 
 function love.load()
-    game_history, game_info, player_won = level1()
+    game_history, game_info, player_won = level1(player_code)
     print('game player ran', game_history, player_won and "player won!" or "player lost!")
 
     width_of_chute = 35
@@ -21,7 +22,7 @@ end
 
 function love.update(dt)
     time = time + dt
-    if time > .03 then
+    if time > .1 then
         time = 0
         game_time_state = game_time_state + 1
     end

@@ -2,14 +2,13 @@ local Chutes = require'chutes'
 local Ball_Dropper = require'ball_dropper_random'
 local LookRandom = require'random_number_look'
 local Bucket = require'bucket'
-local player_function = require'player'
 local game_player = require'game_player'
 
-return function()
-    local number_of_chutes = 9
+return function(player_function)
+    local number_of_chutes = 12
     local length_of_chutes = 16
-    local number_of_balls_that_will_fall = 500
-    local tocks_between_drops = 10
+    local number_of_balls_that_will_fall = 650
+    local tocks_between_drops = 18
     local starting_chute = 1
 
     local chutes = Chutes(number_of_chutes, length_of_chutes)
@@ -27,11 +26,26 @@ return function()
         else
             status, err = coroutine.resume(player_coroutine)
         end
-        if not status then print('ERROR!!!\n\t' .. err) end
-            played_at_least_once = true
+        if not status and err:sub(1,1) ~= 'c' then 
+            print('ERROR!!!\n\t' .. err)
+        end
+        played_at_least_once = true
     end
 
     game_history, board_info, player_won = game_player(ball_dropper, chutes, bucket, run_user_code)
-    
+
+    -- for _,moment in ipairs(game_history) do
+    --     if #moment.lost_balls > 0 then 
+    --         io.write('   lost ball!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ' .. moment.lost_balls[1] .. '\n')
+    --     else
+    --          io.write('\n')
+    --     end
+
+    --     io.write('balls in play    ')
+    --     for _,ball in ipairs(moment.balls_in_play or {}) do
+    --         io.write(ball.chute .. ':' .. ball.location .. ' ')
+    --     end
+    -- end
+
     return game_history, board_info, player_won
 end
