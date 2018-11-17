@@ -8,8 +8,6 @@ return function(controller, gantt)
         end
     end
 
-    coroutine.yield()
-
     local i = 1
 
     while true do

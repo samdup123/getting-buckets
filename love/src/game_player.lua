@@ -9,6 +9,14 @@ return function(ball_dropper, chutes, bucket, run_user_code)
         return chute_num == bucket_position
     end
 
+    local debug = ''
+
+    table.insert(history, {
+        balls_in_play = {},
+        bucket_position = bucket.initial_position(),
+        lost_balls = {}
+    })
+
     function tock()
         local new_ball = ball_dropper.tock()
         balls_in_play, balls_exiting = chutes.tock(new_ball)

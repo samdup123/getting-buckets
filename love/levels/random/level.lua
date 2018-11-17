@@ -30,7 +30,7 @@ return function()
             played_at_least_once = true
     end
 
-    game_history, board_info, player_won = game_player(ball_dropper, chutes, bucket, run_user_code)
+    local game_history, board_info, player_won = game_player(ball_dropper, chutes, bucket, run_user_code)
 
     return game_history, board_info, player_won
 end

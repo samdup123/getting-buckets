@@ -32,20 +32,21 @@ return function(player_function)
         played_at_least_once = true
     end
 
-    game_history, board_info, player_won = game_player(ball_dropper, chutes, bucket, run_user_code)
+    local game_history, board_info, player_won = game_player(ball_dropper, chutes, bucket, run_user_code)
 
-    -- for _,moment in ipairs(game_history) do
-    --     if #moment.lost_balls > 0 then 
-    --         io.write('   lost ball!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ' .. moment.lost_balls[1] .. '\n')
-    --     else
-    --          io.write('\n')
-    --     end
+    local partial_game_history = require('game_history_parser')(game_history, 20)
 
-    --     io.write('balls in play    ')
-    --     for _,ball in ipairs(moment.balls_in_play or {}) do
-    --         io.write(ball.chute .. ':' .. ball.location .. ' ')
-    --     end
-    -- end
+    for _,moment in ipairs(partial_game_history) do
+        io.write('i ' .. moment.moment_number .. '  pos ' .. moment.bucket_position .. ' balls in play    ')
+        for _,ball in ipairs(moment.balls_in_play or {}) do
+            io.write(ball.chute .. ':' .. ball.location .. ' ')
+        end
+        if #moment.lost_balls > 0 then 
+            io.write('  lost ' .. moment.lost_balls[1] .. '\n')
+        else
+             io.write('\n')
+        end
+    end
 
     return game_history, board_info, player_won
 end
