@@ -1,10 +1,21 @@
-return function(game_history, moments_kept)
+return function(game_history, memory_length)
     local partial_game_history = {}
-    for i = moments_kept + 1, #game_history do
+
+    local anything_saved = false
+
+    local last_moment_unsaved_within_memory_length = 1
+
+    for i = 1, #game_history do
+        if i - last_moment_unsaved_within_memory_length > memory_length then
+            last_moment_unsaved_within_memory_length = last_moment_unsaved_within_memory_length + 1
+        end
+
         if (#(game_history[i].lost_balls or {}) > 0) then
-            for j = i - moments_kept, i do
+            for j = last_moment_unsaved_within_memory_length, i do
                 table.insert(partial_game_history, game_history[j])
+                last_moment_unsaved_within_memory_length = j
             end
+            last_moment_unsaved_within_memory_length = last_moment_unsaved_within_memory_length + 1
         end
     end
     return partial_game_history
