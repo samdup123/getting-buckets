@@ -9,19 +9,25 @@ return function(ball_dropper, chutes, bucket, run_user_code)
         return chute_num == bucket_position
     end
 
-    local debug = ''
+    local user_debug_string = ''
+    local function debug_function(...)
+        local args = {...}
+        for _,arg in ipairs(args) do
+            user_debug_string = user_debug_string .. arg
+        end
+    end
 
     table.insert(history, {
         balls_in_play = {},
         bucket_position = bucket.initial_position(),
-        lost_balls = {}
+        lost_balls = {},
     })
 
     function tock()
         local new_ball = ball_dropper.tock()
         balls_in_play, balls_exiting = chutes.tock(new_ball)
         bucket_position = bucket.tock(balls_in_play)
-        run_user_code()
+        run_user_code(debug_function)
 
         -- write test case for this? don't know how
         for i = #balls_exiting, 1, -1 do
@@ -33,8 +39,10 @@ return function(ball_dropper, chutes, bucket, run_user_code)
         table.insert(history, {
             balls_in_play = balls_in_play,
             bucket_position = bucket_position,
-            lost_balls = balls_exiting
+            lost_balls = balls_exiting,
+            debug = user_debug_string
         })
+        user_debug_string = ''
 
         return (#balls_in_play == 0 and ball_dropper.done())
     end

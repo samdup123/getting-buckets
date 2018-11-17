@@ -1,6 +1,6 @@
 local function min(a,b) return a<b and a or b end
 local function max(a,b) return a<b and b or a end
-return function(controller)
+return function(controller, print)
     local current_chute = controller.current_chute()
     local last_chute = controller.number_of_chutes()
     local direction_of_movement = 'left'
@@ -33,18 +33,18 @@ return function(controller)
     while true do
         
         if current_chute > math.floor(last_chute / 2) then
-            -- print('more', current_chute, math.floor(last_chute / 2), last_chute)
+            print('more' .. ' c' .. current_chute)
             limit_high = current_chute - 1
             limit_low = max(1, current_chute - last_chute + 2)
         else
-            -- print('less', current_chute, math.floor(last_chute / 2), last_chute)
+            print('less' .. ' c' .. current_chute)
             limit_low = current_chute + 1
             limit_high = min(last_chute, current_chute + last_chute - 2)
         end
 
         
         while true do
-            -- print(current_chute, limit_low, limit_high)
+            print(' cur' .. current_chute .. ' low' .. limit_low .. ' hi' .. limit_high)
             if current_chute <= limit_low then
                 direction_of_movement = 'right'
             elseif current_chute >= limit_high then
@@ -52,10 +52,10 @@ return function(controller)
             end
     
             if not controller.ball_in_chute() then
-                -- print('moved')
+                print(' moved')
                 move()
             else
-                -- print('didnt move')
+                print(' didnt move')
                 coroutine.yield()
                 break
             end

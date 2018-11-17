@@ -16,12 +16,15 @@ describe('game player', function()
 
         local user_code_gantt = 
         {'r', 'l', '', 'r', 'r'}
+        local user_code_debug_gantt = 
+        {'hi', 'hey', 'hello', 'howdy', 'holla'}
+
         local user_code_coroutine = coroutine.create(user_code)
 
         local played_at_least_once = false
-        local function run_user_code()
+        local function run_user_code(debug_function)
             if not played_at_least_once then
-                status, err = coroutine.resume(user_code_coroutine, bucket.controller(), user_code_gantt)
+                status, err = coroutine.resume(user_code_coroutine, bucket.controller(), debug_function, user_code_gantt, user_code_debug_gantt)
             else
                 status, err = coroutine.resume(user_code_coroutine)
             end
@@ -82,6 +85,15 @@ describe('game player', function()
             {1,2}
         }
 
+        local expected_debug_outputs = {
+            nil,
+            'hi', 
+            'hey',
+            'hello',
+            'howdy',
+            'holla'
+        }
+
         local i = 1
         for _,moment in ipairs(history) do
             -- io.write('bucketpos ' .. moment.bucket_position .. '  ')
@@ -94,6 +106,10 @@ describe('game player', function()
                 -- io.write('lost ' .. ball .. ' ')
             end
             assert.are.same(expected_lost_balls[i] or {}, moment.lost_balls)
+            
+            -- io.write('debug ' .. (moment.debug or ''))
+            assert.are.same(expected_debug_outputs[i] or '', moment.debug or '')
+
             -- print('')
             i = i + 1
         end

@@ -1,4 +1,4 @@
-return function(controller, gantt)
+return function(controller, debug, movement_gantt, debug_output_gantt)
     local function move(direction)
         local dir
         if direction == 'l' then
@@ -12,8 +12,9 @@ return function(controller, gantt)
 
     while true do
         
-        if i <= #gantt then
-            move(gantt[i])
+        if i <= #movement_gantt then
+            move(movement_gantt[i])
+            debug(debug_output_gantt[i])
             i = i + 1
         end
 
