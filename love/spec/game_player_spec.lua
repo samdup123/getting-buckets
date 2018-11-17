@@ -17,10 +17,18 @@ describe('game player', function()
         local user_code_gantt = 
         {'r', 'l', '', 'r', 'r'}
         local user_code_coroutine = coroutine.create(user_code)
-        coroutine.resume(user_code_coroutine, bucket.controller(), user_code_gantt)
-        
-        local run_user_code = function()
-            coroutine.resume(user_code_coroutine)
+
+        local played_at_least_once = false
+        local function run_user_code()
+            if not played_at_least_once then
+                status, err = coroutine.resume(user_code_coroutine, bucket.controller(), user_code_gantt)
+            else
+                status, err = coroutine.resume(user_code_coroutine)
+            end
+            if not status and err:sub(1,1) ~= 'c' then 
+                print('ERROR!!!\n\t' .. err)
+            end
+            played_at_least_once = true
         end
 
         history, board_info, player_won_game = GamePlayer(ball_dropper, chutes, bucket, run_user_code)
@@ -28,7 +36,7 @@ describe('game player', function()
         assert.are.equal(number_of_chutes, board_info.number_of_chutes)
         assert.are.equal(length_of_chutes, board_info.length_of_chutes)
 
-        local expected_bucket_positions = {1, 2, 1, 1, 2, 3, 3, 3, 3, 3, 3}
+        local expected_bucket_positions = {1, 1, 2, 1, 1, 2, 3, 3, 3, 3, 3, 3}
         local expected_chute_snapshots = {
             nil,
             {
@@ -76,17 +84,17 @@ describe('game player', function()
 
         local i = 1
         for _,moment in ipairs(history) do
-            io.write('bucketpos ' .. moment.bucket_position .. '  ')
+            -- io.write('bucketpos ' .. moment.bucket_position .. '  ')
             assert.are.equal(expected_bucket_positions[i], moment.bucket_position)
             for _,ball in ipairs(moment.balls_in_play) do
-                io.write(ball.chute .. '-' .. ball.location .. '  ')
+                -- io.write(ball.chute .. '-' .. ball.location .. '  ')
             end
             assert.are.same(expected_chute_snapshots[i] or {}, moment.balls_in_play)
             for _,ball in ipairs(moment.lost_balls) do
-                io.write('lost ' .. ball .. ' ')
+                -- io.write('lost ' .. ball .. ' ')
             end
             assert.are.same(expected_lost_balls[i] or {}, moment.lost_balls)
-            print('')
+            -- print('')
             i = i + 1
         end
     end)
