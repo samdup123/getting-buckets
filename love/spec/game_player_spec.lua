@@ -78,7 +78,7 @@ describe('game player', function()
             {1, 3},
             nil,
             nil,
-            nil,
+            {2},
             {2},
             nil,
             nil,
