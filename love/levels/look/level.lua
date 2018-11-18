@@ -8,7 +8,7 @@ return function(player_function)
     local number_of_chutes = 12
     local length_of_chutes = 16
     local number_of_balls_that_will_fall = 650
-    local tocks_between_drops = 18
+    local tocks_between_drops = 19
     local starting_chute = 1
 
     local chutes = Chutes(number_of_chutes, length_of_chutes)

@@ -26,8 +26,6 @@ return function(ball_dropper, chutes, bucket, run_user_code)
     function tock()
         local new_ball = ball_dropper.tock()
         balls_in_play, balls_exiting = chutes.tock(new_ball)
-        bucket_position = bucket.tock(balls_in_play)
-        run_user_code(debug_function)
 
         -- write test case for this? don't know how
         for i = #balls_exiting, 1, -1 do
@@ -35,6 +33,12 @@ return function(ball_dropper, chutes, bucket, run_user_code)
                 table.remove(balls_exiting, i)
             end
         end
+        if #balls_exiting > 0 then 
+            player_won_game = false
+        end
+
+        bucket_position = bucket.tock(balls_in_play)
+        run_user_code(debug_function)
 
         table.insert(history, {
             balls_in_play = balls_in_play,

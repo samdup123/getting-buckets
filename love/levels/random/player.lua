@@ -1,4 +1,4 @@
-return function(controller)
+return function(controller, debug)
     local current_chute = controller.current_chute()
     local last_chute = controller.number_of_chutes()
     local direction_of_movement = 'left'
@@ -18,6 +18,8 @@ return function(controller)
             move()
         end
         current_chute = controller.current_chute()
+
+        debug('fart')
         
         coroutine.yield()
     end

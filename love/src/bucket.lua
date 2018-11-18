@@ -3,13 +3,17 @@ return function(number_of_chutes, starting_chute)
     local current_chute = starting_chute
 
     local balls_in_play = {}
+    local balls_exiting = {}
 
-    local function clear_balls_in_play()
+    local function clear_balls()
         for chute = 1, number_of_chutes do
             balls_in_play[chute] = false
         end
+        for chute = 1, number_of_chutes do
+            balls_exiting[chute] = false
+        end
     end
-    clear_balls_in_play()
+    clear_balls()
 
     local a_move_has_happened_since_a_tock = false
 
@@ -48,10 +52,13 @@ return function(number_of_chutes, starting_chute)
     }
 
     return {
-        tock = function(balls)
-            clear_balls_in_play()
-            for _,ball in ipairs(balls or {}) do
+        tock = function(_balls_in_play, _balls_exiting)
+            clear_balls()
+            for _,ball in ipairs(_balls_in_play or {}) do
                 balls_in_play[ball.chute] = true
+            end
+            for _,ball in ipairs(_balls_exiting or {}) do
+                balls_exiting[ball.chute] = true
             end
 
             a_move_has_happened_since_a_tock = false
