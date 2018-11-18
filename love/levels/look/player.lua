@@ -33,18 +33,15 @@ return function(controller, print)
     while true do
         
         if current_chute > math.floor(last_chute / 2) then
-            print('more' .. ' c' .. current_chute)
             limit_high = current_chute - 1
             limit_low = max(1, current_chute - last_chute + 2)
         else
-            print('less' .. ' c' .. current_chute)
             limit_low = current_chute + 1
             limit_high = min(last_chute, current_chute + last_chute - 2)
         end
 
         
         while true do
-            print(' cur' .. current_chute .. ' low' .. limit_low .. ' hi' .. limit_high)
             if current_chute <= limit_low then
                 direction_of_movement = 'right'
             elseif current_chute >= limit_high then
@@ -52,10 +49,8 @@ return function(controller, print)
             end
     
             if not controller.ball_in_chute() then
-                print(' moved')
                 move()
             else
-                print(' didnt move')
                 coroutine.yield()
                 break
             end

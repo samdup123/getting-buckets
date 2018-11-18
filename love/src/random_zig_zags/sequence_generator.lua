@@ -12,7 +12,7 @@ return function(total_number_of_chutes, number_of_balls_to_drop, starting_chute,
             step = first_direction
         end
     end
-    
+
     local running_change_points
     if #direction_change_points > 0 then
         running_change_points = {direction_change_points[1]}
@@ -23,12 +23,11 @@ return function(total_number_of_chutes, number_of_balls_to_drop, starting_chute,
     else
         running_change_points = {number_of_balls_to_drop}
     end
-    
+
     local last_spot_dropped = starting_chute
     for run_index,run in ipairs(running_change_points) do
-        
+
         for _ = 1,run do
-            
             table.insert(gantt, last_spot_dropped)
             if _ ~= run then
                 if last_spot_dropped + step > total_number_of_chutes or 

@@ -75,10 +75,10 @@ describe('game player', function()
             nil,
             nil,
             nil,
-            {3},
+            {1, 3},
             nil,
             nil,
-            {2},
+            nil,
             {2},
             nil,
             nil,
@@ -96,21 +96,21 @@ describe('game player', function()
 
         local i = 1
         for _,moment in ipairs(history) do
-            -- io.write('bucketpos ' .. moment.bucket_position .. '  ')
+            io.write('bucketpos ' .. moment.bucket_position .. '  ')
             assert.are.equal(expected_bucket_positions[i], moment.bucket_position)
             for _,ball in ipairs(moment.balls_in_play) do
-                -- io.write(ball.chute .. '-' .. ball.location .. '  ')
+                io.write(ball.chute .. '-' .. ball.location .. '  ')
             end
             assert.are.same(expected_chute_snapshots[i] or {}, moment.balls_in_play)
             for _,ball in ipairs(moment.lost_balls) do
-                -- io.write('lost ' .. ball .. ' ')
+                io.write('lost ' .. ball .. ' ')
             end
             assert.are.same(expected_lost_balls[i] or {}, moment.lost_balls)
             
-            -- io.write('debug ' .. (moment.debug or ''))
+            io.write('debug ' .. (moment.debug or ''))
             assert.are.same(expected_debug_outputs[i] or '', moment.debug or '')
 
-            -- print('')
+            print('')
             i = i + 1
         end
     end)

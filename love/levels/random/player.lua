@@ -19,8 +19,6 @@ return function(controller, debug)
         end
         current_chute = controller.current_chute()
 
-        debug('fart')
-        
         coroutine.yield()
     end
 end
