@@ -30,6 +30,7 @@ return function(total_number_of_chutes, number_of_balls_to_drop, starting_chute,
         for _ = 1,run do
             table.insert(gantt, last_spot_dropped)
             if _ ~= run then
+                print('last spot dropped', last_spot_dropped)
                 if last_spot_dropped + step > total_number_of_chutes or 
                    last_spot_dropped + step < 1 then
                     step = -step

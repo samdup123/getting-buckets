@@ -41,7 +41,7 @@ describe('distinct random values', function()
         assert_values_are_far_enough_apart(vals, 1)
     end)
 
-    it('should err when there is no possibility for distinct values with the given parameters', function()
+    it('should error when there is no possibility for distinct values with the given parameters', function()
         local start, _end, count = 1, 11, 4
         local cut = function() func(start, _end, count) end
         

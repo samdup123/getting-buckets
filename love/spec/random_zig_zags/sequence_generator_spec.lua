@@ -89,6 +89,28 @@ describe('zig zag sequence generator', function()
         assert.are.same(expected_gantt, actual_gantt)
     end)
 
+    it('should create a zig zag with one direction change that is immediate', function()
+        local total_number_of_chutes, number_of_balls_to_drop = 10, 6
+        local first_direction = 1
+        local starting_chute = 3
+        local direction_change_points = {1}
+
+        local actual_gantt = generate(
+            total_number_of_chutes,
+            number_of_balls_to_drop,
+            starting_chute,
+            first_direction,
+            direction_change_points
+        )
+
+        local expected_gantt = {
+            3, {}, 2, 1, 2, 3, 4
+        --  1,     2, 3, 4, 5, 6
+        }
+
+        assert.are.same(expected_gantt, actual_gantt)
+    end)
+
     it('should create a zig zag with no direction changes specified, that changes anyways due to boundaries', function()
         local total_number_of_chutes, number_of_balls_to_drop = 10, 6
         local first_direction = 1

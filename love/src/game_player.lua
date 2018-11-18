@@ -37,7 +37,6 @@ return function(ball_dropper, chutes, bucket, run_user_code)
     function tock()
         local new_ball = ball_dropper.tock()
         balls_in_play, balls_exiting = chutes.tock(new_ball)
-
         local old_bucket_position = bucket_position
         bucket_position = bucket.tock(balls_in_play)
         run_user_code(debug_function)
