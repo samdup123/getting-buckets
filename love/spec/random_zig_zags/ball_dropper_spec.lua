@@ -5,7 +5,7 @@ describe('ball dropper', function()
         local number_of_chutes = 10
         local number_of_balls_to_drop = 36
         local number_of_zig_zags = 4
-        local approximate_balls_per_zig_zag = 9
+        local approximate_balls_per_zig_zag = 10
         local tocks_between_zig_zags = 11
         local random = math.random
         local gantt = ball_dropper(
@@ -18,7 +18,7 @@ describe('ball dropper', function()
         )
 
         for i = 1, #gantt do
-            print(gantt[i])
+            print('fart', gantt[i])
         end
     end)
 end)

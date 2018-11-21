@@ -1,3 +1,5 @@
+local function min(a,b) return a<b and a or b end
+
 package.path = './src/random_zig_zags/?.lua;' .. package.path
 
 local zig_zag_sequencer = require'random_zig_zags/sequence_generator'
@@ -25,8 +27,9 @@ return function(number_of_chutes, number_of_balls_to_drop, number_of_zig_zags, a
 
     local number_dropped = 0
 
-    while number_dropped < number_of_balls_to_drop do
-        table.insert(zig_zags, ZigZag(number_of_balls_to_drop - number_dropped, random(number_of_chutes)))
+    while number_dropped < number_of_balls_to_drop - math.floor(number_of_balls_to_drop / approximate_balls_per_zig_zag) do
+        table.insert(zig_zags, ZigZag(approximate_balls_per_zig_zag, random(number_of_chutes)))
+        number_dropped = number_dropped + approximate_balls_per_zig_zag
     end
     
     local gantt = {}
@@ -35,7 +38,9 @@ return function(number_of_chutes, number_of_balls_to_drop, number_of_zig_zags, a
         for _,val in ipairs(zig_zag) do
             table.insert(gantt, val)
         end
+        -- print(i, #zig_zags, i ~= #zig_zags)
         if i ~= #zig_zags then
+            -- print('inserting floop')
             for _ = 1, tocks_between_zig_zags do
                 table.insert(gantt, '')
             end

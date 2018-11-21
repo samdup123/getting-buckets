@@ -34,20 +34,7 @@ return function(player_function)
 
     local game_history, board_info, player_won = game_player(ball_dropper, chutes, bucket, run_user_code)
 
-    local partial_game_history = require('game_history_parser')(game_history, 28)
-
-    for _,moment in ipairs(partial_game_history) do
-        io.write('i ' .. moment.moment_number .. '  pos ' .. moment.bucket_position .. ' balls in play    ')
-        for _,ball in ipairs(moment.balls_in_play or {}) do
-            io.write(ball.chute .. ':' .. ball.location .. ' ')
-        end
-
-        if #moment.lost_balls > 0 then 
-            io.write('  lost!!!!! ' .. moment.lost_balls[1] .. ' ')
-        end
-
-        io.write(moment.debug .. '\n\n')
-    end
+    local history_of_losses = require('game_history_parser')(game_history, 28)
 
     return game_history, board_info, player_won
 end

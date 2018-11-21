@@ -9,6 +9,7 @@ return function(min, max, count, diff)
     end
 
     if count_of_vals - (diff * 2) * count < count then
+        print('count of vals', count_of_vals, (diff * 2) * count, count)
         error('the parameters passed into the distinct number generator are impossible to satisfy')
     end
 
