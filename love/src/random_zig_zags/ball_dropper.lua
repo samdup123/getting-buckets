@@ -15,11 +15,15 @@ local function random_direction()
     end
 end
 
-return function(number_of_chutes, number_of_balls_to_drop, number_of_zig_zags, approximate_balls_per_zig_zag, tocks_between_zig_zags, random)
+return function(number_of_chutes, number_of_balls_to_drop, number_of_zig_zags, tocks_between_zig_zags, random)
 
     local function ZigZag(number_of_balls_to_drop, starting_chute)
         local direction = random_direction()
-        local direction_change_points = distinct_random_values(1, number_of_balls_to_drop, 2, 2)
+        local direction_change_points = distinct_random_values(1, number_of_balls_to_drop, math.floor(number_of_balls_to_drop / 5), 2)
+        io.write('dir change points ')
+        table.sort(direction_change_points)
+        for i=1,#direction_change_points do io.write(direction_change_points[i] .. ' ') end
+        io.write('\n')
         return zig_zag_sequencer(number_of_chutes, number_of_balls_to_drop, starting_chute, direction, direction_change_points)
     end
 
@@ -27,9 +31,19 @@ return function(number_of_chutes, number_of_balls_to_drop, number_of_zig_zags, a
 
     local number_dropped = 0
 
-    while number_dropped < number_of_balls_to_drop - math.floor(number_of_balls_to_drop / approximate_balls_per_zig_zag) do
-        table.insert(zig_zags, ZigZag(approximate_balls_per_zig_zag, random(number_of_chutes)))
-        number_dropped = number_dropped + approximate_balls_per_zig_zag
+    local max_balls_in_zig_zag = 20
+
+    while number_dropped < number_of_balls_to_drop do
+
+        local balls_left = number_of_balls_to_drop - number_dropped
+        local number_of_balls_in_zig_zag
+        if balls_left > max_balls_in_zig_zag then
+            number_of_balls_in_zig_zag = random(6, max_balls_in_zig_zag)
+        else
+            number_of_balls_in_zig_zag = balls_left
+        end
+        table.insert(zig_zags, ZigZag(number_of_balls_in_zig_zag, random(number_of_chutes)))
+        number_dropped = number_dropped + number_of_balls_in_zig_zag
     end
     
     local gantt = {}
@@ -38,9 +52,7 @@ return function(number_of_chutes, number_of_balls_to_drop, number_of_zig_zags, a
         for _,val in ipairs(zig_zag) do
             table.insert(gantt, val)
         end
-        -- print(i, #zig_zags, i ~= #zig_zags)
         if i ~= #zig_zags then
-            -- print('inserting floop')
             for _ = 1, tocks_between_zig_zags do
                 table.insert(gantt, '')
             end

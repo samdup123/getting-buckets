@@ -8,8 +8,7 @@ return function(min, max, count, diff)
         vals_lookup[i] = true 
     end
 
-    if count_of_vals - (diff * 2) * count < count then
-        print('count of vals', count_of_vals, (diff * 2) * count, count)
+    if count_of_vals - (diff * 2) * count < count and count > 1 then
         error('the parameters passed into the distinct number generator are impossible to satisfy')
     end
 
