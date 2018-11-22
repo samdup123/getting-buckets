@@ -40,7 +40,7 @@ return function(total_number_of_chutes, number_of_balls_to_drop, starting_chute,
         if run_index == #running_change_points then
             break
         end
-        table.insert(gantt, {})
+        table.insert(gantt, false)
         step = -step
         last_spot_dropped = last_spot_dropped + step
     end
