@@ -5,14 +5,14 @@ local Bucket = require'bucket'
 local game_player = require'game_player'
 
 return function(player_function)
-    local number_of_chutes = 30
-    local length_of_chutes = 16
-    local number_of_balls_that_will_fall = 650
-    local tocks_between_drops = 19
-    local starting_chute = 1
+    local number_of_chutes = 40
+    local length_of_chutes = 5
+    local number_of_balls_that_will_fall = 2000
+    local tocks_between_drops = 10
+    local starting_chute = 14
 
     local chutes = Chutes(number_of_chutes, length_of_chutes)
-    local random_func = ApproximatelySequentialRandom(number_of_chutes, 7, 1, math.random)
+    local random_func = ApproximatelySequentialRandom(number_of_chutes, 7, 1, starting_chute, math.random)
     local ball_dropper = Ball_Dropper(random_func, number_of_chutes, number_of_balls_that_will_fall, tocks_between_drops)
     local bucket = Bucket(number_of_chutes, starting_chute)
     local controller = bucket.controller()

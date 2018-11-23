@@ -5,10 +5,11 @@ describe('random number approximately sequential', function()
     local f = mach.mock_function('f')
 
     it('should work', function()
-        local rand = Random(20, 7, 1, f)
+        local max, approximate_seq, band, starting_num = 20, 7, 1, 11
+        local rand = Random(max, approximate_seq, band, starting_num, f)
 
         local new_val
-        f:should_be_called_with(20):and_will_return(11):when(function() new_val = rand() end)
+        new_val = rand()
         assert.are.equal(11, new_val)
 
         f:should_be_called_with(6, 8):and_will_return(7):when(function() new_val = rand() end)
@@ -24,10 +25,9 @@ describe('random number approximately sequential', function()
         assert.are.equal(2, new_val)
 
         f:should_be_called_with(6, 8):and_will_return(7):when(function() new_val = rand() end)
-        assert.are.equal(5, new_val)
-
+        assert.are.equal(7, new_val)
 
         f:should_be_called_with(6, 8):and_will_return(8):when(function() new_val = rand() end)
-        assert.are.equal(13, new_val)
+        assert.are.equal(15, new_val)
     end)
 end)

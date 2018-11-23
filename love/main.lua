@@ -3,14 +3,14 @@ package.path = './love/src/?.lua;' .. package.path
 
 math.randomseed(os.time())
 
-local player_code = require'levels/look/player'
-local level1 = require'levels/look/level'
+local player_code = require'levels/approximately_sequential/player'
+local level1 = require'levels/approximately_sequential/level'
 
 function love.load()
     game_history, game_info, player_won = level1(player_code)
-    print('game player ran', game_history, player_won and "player won!" or "player lost!")
+    print(player_won and "player won!" or "player lost!")
 
-    width_of_chute = 35
+    width_of_chute = 18
     distance_unit = width_of_chute
     chute_rect = {start_x = 10, start_y = 10, width = width_of_chute * game_info.number_of_chutes, height = distance_unit * game_info.length_of_chutes}
     bucket_rect = {start_y = chute_rect.start_y + chute_rect.height, width = width_of_chute, height = distance_unit}

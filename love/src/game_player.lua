@@ -23,13 +23,16 @@ return function(ball_dropper, chutes, bucket, run_user_code)
         lost_balls = {},
     })
 
-    local function remove_balls_that_were_caught(balls_exiting)
+    local function remove_balls_that_were_caught(balls_exiting, catching_position)
         for i = #balls_exiting, 1, -1 do
-            if balls_exiting[i] == bucket_position then
+            if balls_exiting[i] == catching_position then
                 table.remove(balls_exiting, i)
             end
         end
-        if #balls_exiting > 0 then 
+    end
+
+    local function player_loses_game_if_any_balls_are_left(balls_exiting)
+        if #balls_exiting > 0 then
             player_won_game = false
         end
     end
@@ -42,8 +45,9 @@ return function(ball_dropper, chutes, bucket, run_user_code)
         run_user_code(debug_function)
         
         if old_bucket_position == bucket_position then
-            remove_balls_that_were_caught(balls_exiting)
+            remove_balls_that_were_caught(balls_exiting, bucket_position)
         end
+        player_loses_game_if_any_balls_are_left(balls_exiting)
 
         table.insert(history, {
             balls_in_play = balls_in_play,
