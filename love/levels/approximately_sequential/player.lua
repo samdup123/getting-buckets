@@ -4,12 +4,13 @@ return function(controller, print)
     local last_chute = controller.number_of_chutes()
     local direction_of_movement = 'right'
 
-    local function opposite_dir() return direction_of_movement == 'right' and 'left' or 'right' end
+    local function flip_dir() direction_of_movement = (direction_of_movement == 'right' and 'left' or 'right') end
 
-    local function no_move()
+    local function no_move(num)
         coroutine.yield()
     end
     local function move(spaces)
+        if space == 0 then coroutine.yield() end
         for i = 1, spaces do
             if current_chute() == 1 then direction_of_movement = 'right' end
             if current_chute() == last_chute then direction_of_movement = 'left' end
@@ -32,16 +33,19 @@ return function(controller, print)
 
     while true do
         ::loop_start::
-        print(' loop start ')
         if ball_in_chute() then 
             no_move()
         else
-            local chute_before_6_move = current_chute()
-
-            print('before 6 move')
-            move(6)
-            print('after 6 move')
-
+            local chute_before_big_move = current_chute()
+            local at_beginning_moving_left = (chute_before_big_move == 2) and (direction_of_movement == 'left')
+            local at_end_moving_right = (chute_before_big_move == last_chute - 1) and (direction_of_movement == 'right')
+            if at_beginning_moving_left or at_end_moving_right then
+                flip_dir()
+                move(4)
+                no_move()
+            else
+                move(6)
+            end
 
             if not ball_in_chute() then
                 move(1)
@@ -54,9 +58,7 @@ return function(controller, print)
                 goto loop_start
             end
 
-            print(' about to do if before special moves' .. chute_before_6_move .. ' ')
-            if chute_before_6_move == 2 or chute_before_6_move == last_chute - 1 then
-                print(' in the special moves')
+            if at_beginning_moving_left or at_end_moving_right then
                 if not ball_in_chute() then
                     move(1)
                 else

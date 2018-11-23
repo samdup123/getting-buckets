@@ -1,10 +1,9 @@
 local Chutes = require'chutes'
 local Ball_Dropper = require'ball_dropper_random'
 local Bucket = require'bucket'
-local player_function = require'player'
 local game_player = require'game_player'
 
-return function()
+return function(player_function)
     local number_of_chutes = 9
     local length_of_chutes = 16
     local number_of_balls_that_will_fall = 50

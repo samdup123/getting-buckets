@@ -24,10 +24,16 @@ describe('random number approximately sequential', function()
         f:should_be_called_with(6, 8):and_will_return(6):when(function() new_val = rand() end)
         assert.are.equal(2, new_val)
 
-        f:should_be_called_with(6, 8):and_will_return(7):when(function() new_val = rand() end)
-        assert.are.equal(7, new_val)
+        f:should_be_called_with(6, 8):and_will_return(6):when(function() new_val = rand() end)
+        assert.are.equal(6, new_val)
 
-        f:should_be_called_with(6, 8):and_will_return(8):when(function() new_val = rand() end)
-        assert.are.equal(15, new_val)
+        f:should_be_called_with(6, 8):and_will_return(6):when(function() new_val = rand() end)
+        assert.are.equal(12, new_val)
+
+        f:should_be_called_with(6, 8):and_will_return(7):when(function() new_val = rand() end)
+        assert.are.equal(19, new_val)
+
+        f:should_be_called_with(6, 8):and_will_return(7):when(function() new_val = rand() end)
+        assert.are.equal(14, new_val)
     end)
 end)
