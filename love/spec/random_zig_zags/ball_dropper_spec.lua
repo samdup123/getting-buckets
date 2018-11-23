@@ -16,7 +16,7 @@ describe('random zig zag ball dropper', function()
         )
 
         for i = 1, #gantt do
-            print('fart', gantt[i])
+            -- print('fart', gantt[i])
         end
     end)
 end)

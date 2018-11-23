@@ -20,10 +20,7 @@ return function(number_of_chutes, number_of_balls_to_drop, number_of_zig_zags, t
     local function ZigZag(number_of_balls_to_drop, starting_chute)
         local direction = random_direction()
         local direction_change_points = distinct_random_values(1, number_of_balls_to_drop, math.floor(number_of_balls_to_drop / 5), 2)
-        io.write('dir change points ')
         table.sort(direction_change_points)
-        for i=1,#direction_change_points do io.write(direction_change_points[i] .. ' ') end
-        io.write('\n')
         return zig_zag_sequencer(number_of_chutes, number_of_balls_to_drop, starting_chute, direction, direction_change_points)
     end
 

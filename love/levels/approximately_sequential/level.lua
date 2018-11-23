@@ -1,18 +1,18 @@
 local Chutes = require'chutes'
 local Ball_Dropper = require'ball_dropper_random'
-local LookRandom = require'random_number_look'
+local ApproximatelySequentialRandom = require'random_number_approximately_sequential'
 local Bucket = require'bucket'
 local game_player = require'game_player'
 
 return function(player_function)
-    local number_of_chutes = 12
+    local number_of_chutes = 30
     local length_of_chutes = 16
     local number_of_balls_that_will_fall = 650
     local tocks_between_drops = 19
     local starting_chute = 1
 
     local chutes = Chutes(number_of_chutes, length_of_chutes)
-    local random_func = LookRandom(number_of_chutes, number_of_chutes - 2, math.random)
+    local random_func = ApproximatelySequentialRandom(number_of_chutes, 7, 1, math.random)
     local ball_dropper = Ball_Dropper(random_func, number_of_chutes, number_of_balls_that_will_fall, tocks_between_drops)
     local bucket = Bucket(number_of_chutes, starting_chute)
     local controller = bucket.controller()
@@ -36,5 +36,5 @@ return function(player_function)
 
     local history_of_losses = require('game_history_parser')(game_history, 28)
 
-    return game_history, board_info, player_won, history_of_losses
+    return game_history, board_info, player_won
 end
