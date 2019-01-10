@@ -5,6 +5,7 @@ local Bucket = require'bucket'
 local game_player = require'game_player'
 
 return function(player_function)
+
     local number_of_chutes = 40
     local length_of_chutes = 5
     local number_of_balls_that_will_fall = 2000
