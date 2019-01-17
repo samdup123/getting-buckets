@@ -26,3 +26,6 @@ go to https://love2d.org/
 
 ## Install Zenhub (software to help with agile development process)
 go to https://www.zenhub.com/extension
+
+## Development Workflow
+The goal for development is write code that satisfies unit tests. We will use the busted test framework. Download instructions are above. 
