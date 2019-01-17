@@ -15,8 +15,8 @@ to .bash_profile (Mac OS X) or .bashrc (Ubuntu).
 This will let you install many versions of Lua side-by-side. Full documentation is available at the lenv project page, but this will install lua 5.3, luarocks for 5.3, the busted test framework, and the luacov coverage tool:
 
 ```lenv fetch
-lenv install 5.3.4
-lenv use 5.3.4
+lenv install 5.3.5
+lenv use 5.3.5
 luarocks install busted
 ```
 
