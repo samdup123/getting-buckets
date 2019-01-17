@@ -2,21 +2,23 @@
 get you some buckets
 
 ## Install Lua
+```
 curl -L http://git.io/lenv | perl
+```
 
 and then adding:
 
-source ~/.lenvrc
+```source ~/.lenvrc```
 
 to .bash_profile (Mac OS X) or .bashrc (Ubuntu).
 
 This will let you install many versions of Lua side-by-side. Full documentation is available at the lenv project page, but this will install lua 5.3, luarocks for 5.3, the busted test framework, and the luacov coverage tool:
 
-lenv fetch
+```lenv fetch
 lenv install 5.3.4
 lenv use 5.3.4
 luarocks install busted
-luarocks install luacov
+```
 
 ## Install Love2d
 go to https://love2d.org/
