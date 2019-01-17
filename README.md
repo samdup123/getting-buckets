@@ -20,3 +20,7 @@ luarocks install luacov
 
 ## Install Love2d
 go to https://love2d.org/
+
+
+## Install Zenhub (software to help with agile development process)
+go to https://www.zenhub.com/extension
