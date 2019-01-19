@@ -19,6 +19,7 @@ before_install:
   - luarocks install Lua-cURL         --server=https://luarocks.org/dev
   - luarocks install luacov-coveralls --server=https://luarocks.org/dev
   - luarocks install busted
+  - luarocks install mach
 
 script:
   - cd love
