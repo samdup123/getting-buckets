@@ -20,9 +20,6 @@ before_install:
   - luarocks install luacov-coveralls --server=https://luarocks.org/dev
   - luarocks install busted
 
-install:
-  - luarocks make rockspecs/foo-scm-0.rockspec CFLAGS="-O2 -fPIC -ftest-coverage -fprofile-arcs" LIBFLAG="-shared --coverage"
-
 script:
   - cd love/spec
   - lua -e "print(require'cURL'.version())"
