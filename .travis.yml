@@ -23,15 +23,15 @@ before_install:
   - pip install --user cpp-coveralls
   - luarocks install Lua-cURL         --server=https://luarocks.org/dev
   - luarocks install luacov-coveralls --server=https://luarocks.org/dev
-  - luarocks install lunitx
+  - luarocks install busted
 
 install:
   - luarocks make rockspecs/foo-scm-0.rockspec CFLAGS="-O2 -fPIC -ftest-coverage -fprofile-arcs" LIBFLAG="-shared --coverage"
 
 script:
-  - cd test
+  - cd love/spec
   - lua -e "print(require'cURL'.version())"
-  - lunit.sh test.lua
+  - busted .
 
 after_success:
   - coveralls -b .. -r .. -i ./src --dump c.report.json
