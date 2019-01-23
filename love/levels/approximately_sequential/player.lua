@@ -26,7 +26,6 @@ return function(controller, print)
         end
     end
 
-
     while ball_in_chute() do
         coroutine.yield()
     end
