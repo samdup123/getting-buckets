@@ -1,0 +1,37 @@
+language: c
+
+sudo: false
+
+env:
+  global:
+    - LUAROCKS=2.3.0
+  matrix:
+    - LUA=lua5.3
+
+branches:
+  only:
+    - develop
+    - master
+
+before_install:
+  - source .travis/setenv_lua.sh
+  - pip install --user cpp-coveralls
+  - luarocks install Lua-cURL         --server=https://luarocks.org/dev
+  - luarocks install luacov-coveralls --server=https://luarocks.org/dev
+  - luarocks install busted
+  - luarocks install mach
+  - luarocks install Lua-cURL
+
+script:
+  - cd love
+  - lua -e "print(require'cURL'.version())"
+  - busted .
+
+after_success:
+  - coveralls -b .. -r .. -i ./src --dump c.report.json
+  - luacov-coveralls -j c.report.json -v
+
+notifications:
+  email:
+    on_success: change
+    on_failure: always
