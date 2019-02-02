@@ -1,5 +1,5 @@
 -- set the package path to collect source code
-package.path = '/home/sam/Dropbox/college/seanior/coding-game/love/src/?.lua;' .. package.path
+package.path = '/Users/AndyUyeda/Documents/Spring 2019/550 - Software Engineering/getting-buckets/love/src/?.lua;' .. package.path
 
 math.randomseed(os.time())
 
@@ -7,64 +7,37 @@ local player_code = require'levels/approximately_sequential/player'
 local level1 = require'levels/approximately_sequential/level'
 
 function love.load(arg)
-    print('flart')
-    if arg[#arg] == "-debug" then require("mobdebug").start() end
-    print('floot')
-    game_history, game_info, player_won = level1(player_code)
-    print(player_won and "player won!" or "player lost!")
 
-    width_of_chute = 18
-    distance_unit = width_of_chute
-    chute_rect = {start_x = 10, start_y = 10, width = width_of_chute * game_info.number_of_chutes, height = distance_unit * game_info.length_of_chutes}
-    bucket_rect = {start_y = chute_rect.start_y + chute_rect.height, width = width_of_chute, height = distance_unit}
-    ball = {radius = width_of_chute / 2}
-    time = 0
-
-    game_time_state = 1
 end
 
 function love.update(dt)
-    time = time + dt
-    if time > .01 then
-        time = 0
-        game_time_state = game_time_state + 1
-    end
+
 end
 
-local function draw_rectangle(mode, rect)
-    love.graphics.rectangle(mode, rect.start_x, rect.start_y, rect.width, rect.height)
-end
+function love.keypressed(key)
+   if key == 'f' then
+      local f=io.open("level1.lua", "r")
+      if f~=nil then
+        print("There")
+        io.close(f)
+        os.execute("open level1.lua")
+        return true
+      else
+        print("Not There")
+        file = io.open("level1.lua","w")
+        file:write("return function(controller, print)", "\n")
+        file:write("", "\n")
+        file:write("end", "\n")
 
-local function draw_ball(chute_num, location)
-    love.graphics.circle(
-        'fill',
-        chute_rect.start_x + (chute_num - .5) * width_of_chute,
-        chute_rect.start_y + (location - .5) * distance_unit,
-        ball.radius
-    )
+        file:close()
+        os.execute("open level1.lua")
+        return false
+      end
+   elseif key == 'a' then
+      print("The A key was pressed.")
+   end
 end
 
 function love.draw()
     love.graphics.setColor(1,0,1)
-    
-    draw_rectangle('fill', chute_rect)
-
-    love.graphics.setColor(1,1,1)
-
-    if game_time_state <= #game_history then
-        local moment = game_history[game_time_state]
-    
-        for _,ball in ipairs(moment.balls_in_play) do
-            draw_ball(ball.chute, ball.location)
-        end
-    
-        -- draw bucket
-        love.graphics.rectangle(
-            'fill', 
-            chute_rect.start_x + ((moment.bucket_position - 1) * width_of_chute), 
-            bucket_rect.start_y, 
-            bucket_rect.width, 
-            bucket_rect.height
-        )
-    end
 end
