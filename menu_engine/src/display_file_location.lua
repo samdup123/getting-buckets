@@ -1,6 +1,6 @@
 local check_click = require'check_click'
 local button_rectangle = {mode = 'fill', x = 200, y = 200, width = 100, height = 100, red = 100}
-local button_text = {string = 'done', x = 250, y = 250, blue = 100}
+local button_text = {string = 'done', font = 'main_font', x = 250, y = 250, blue = 100}
 
 return function(release_event)
 
