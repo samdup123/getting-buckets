@@ -9,6 +9,7 @@ local menu_engine = require'menu_engine'({
 
 function love.load()
     datamodel.write('current file location', '/sam/homie-zone/level1_code.lua')
+    love.handlers.menu_event = love.menu_event
 end
  
 function love.update(dt)
@@ -19,4 +20,12 @@ function love.draw()
     for i,drawable in ipairs(screen.drawables) do
         draw(drawable)
     end
+end
+
+function love.mousepressed(x,y)
+    menu_engine.pass_click_event({x = x, y = y})
+end
+
+function love.menu_event(event)
+    menu_engine.pass_menu_state_event(event)
 end
