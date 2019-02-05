@@ -1,5 +1,10 @@
 -- set the package path to collect source code
+local os_process_file = assert(io.popen('pwd', 'r'))
+local working_directory = os_process_file:read('*all')
+os_process_file:close()
+print(working_directory)
 package.path = '/home/sam/Dropbox/college/seanior/coding-game/love/src/?.lua;' .. package.path
+print(output)
 
 math.randomseed(os.time())
 
@@ -7,9 +12,6 @@ local player_code = require'levels/approximately_sequential/player'
 local level1 = require'levels/approximately_sequential/level'
 
 function love.load(arg)
-    print('flart')
-    if arg[#arg] == "-debug" then require("mobdebug").start() end
-    print('floot')
     game_history, game_info, player_won = level1(player_code)
     print(player_won and "player won!" or "player lost!")
 

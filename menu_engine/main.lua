@@ -4,7 +4,8 @@ local draw = require'draw_various_drawables'(love.graphics, {main_font = main_fo
 local datamodel = require'datamodel'
 
 local menu_engine = require'menu_engine'({
-    require'display_file_location'(function(...) love.event.push(...) end, datamodel)
+    display_file_location = require'display_file_location'(function(...) love.event.push(...) end, datamodel),
+    null = require'null'
 })
 
 function love.load()
