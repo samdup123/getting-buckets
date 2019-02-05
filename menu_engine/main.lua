@@ -1,7 +1,7 @@
 package.path = '/home/sam/Dropbox/college/seanior/coding-game/menu_engine/src/?.lua;' .. package.path
 local main_font = love.graphics.newFont(24)
 local draw = require'draw_various_drawables'(love.graphics, {main_font = main_font})
-local datamodel = require'datamodel'
+local datamodel = require'datamodel'({'current file location'   })
 
 local menu_engine = require'menu_engine'({
     display_file_location = require'display_file_location'(function(...) love.event.push(...) end, datamodel),

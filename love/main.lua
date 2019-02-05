@@ -8,8 +8,8 @@ print(output)
 
 math.randomseed(os.time())
 
-local player_code = require'levels/approximately_sequential/player'
-local level1 = require'levels/approximately_sequential/level'
+local player_code = require'levels/random/player'
+local level1 = require'levels/random/level'
 
 function love.load(arg)
     game_history, game_info, player_won = level1(player_code)

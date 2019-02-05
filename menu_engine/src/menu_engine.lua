@@ -7,10 +7,10 @@ return function (menus)
 
     local state = {
         display_file_location = {
-            entry = function(signal)
+            entry = function()
                 current_menu = menus.display_file_location
             end,
-            job_complete = function(signal)
+            job_complete = function()
                 current_menu = menus.null
             end,
         },
