@@ -14,7 +14,7 @@ return function(items)
         end
     end
 
-    local callback = function() end
+    local callbacks = {}
 
     return {
         read = function(label)
@@ -24,10 +24,13 @@ return function(items)
         write = function(label, data)
             if not label_map[label] then error('label "' .. label .. '" is not specified') end  
             model[label] = data
-            callback(label, data)
+            
+            for _,cb in ipairs(callbacks) do
+                cb(label, data)
+            end
         end,
         subscribe_to_on_change = function(cb)
-            callback = cb
+            table.insert(callbacks, cb)
         end
     }
 end

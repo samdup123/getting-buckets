@@ -1,7 +1,10 @@
 describe('datamodel', function()
     local Datamodel = require'datamodel'
     local mach = require'mach'
-    local event_subscription_callback = mach.mock_function('callback')
+    local f = mach.mock_function('callback1')
+    local g = mach.mock_function('callback2')
+
+    local function nothing_should_happen_when(func) func() end
 
     it('should allow for storage and retrieval of information from a label', function()
         local datamodel = Datamodel({'data'})
@@ -33,8 +36,35 @@ describe('datamodel', function()
 
     it('should produce an on-change event when data is changed', function()
         local datamodel = Datamodel({'data'})
-        datamodel.subscribe_to_on_change(event_subscription_callback)
-        event_subscription_callback:should_be_called_with('data', 4):when(
+        datamodel.subscribe_to_on_change(f)
+        f:should_be_called_with('data', 4):when(
             function() datamodel.write('data', 4) end)
+    end)
+
+    it('should allow multiple subscribers', function()
+        local datamodel = Datamodel({'data'})
+        datamodel.subscribe_to_on_change(f)
+        datamodel.subscribe_to_on_change(f)
+        f:should_be_called_with('data', 4):multiple_times(2):when(
+            function() datamodel.write('data', 4) end)
+    end)
+
+    it('should allow unsubscriptions', function()
+        local datamodel = Datamodel({'data'})
+        local token1 = datamodel.subscribe_to_on_change(f)
+        local token2 = datamodel.subscribe_to_on_change(g)
+        f:should_be_called_with('data', 4)
+        :and_also(g:should_be_called_with('data', 4)):when(
+            function() datamodel.write('data', 4) end)
+
+        datamodel.unsubscribe_to_on_change(token2)
+
+        f:should_be_called_with('data', 5):when(
+            function() datamodel.write('data', 5) end)
+
+        datamodel.unsubscribe_to_on_change(token1)
+
+        nothing_should_happen_when(
+            function() datamodel.write('data', 6) end)
     end)
 end)
