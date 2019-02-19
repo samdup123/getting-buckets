@@ -29,3 +29,54 @@ go to https://www.zenhub.com/extension
 
 ## Development Workflow
 The goal for development is write code that satisfies unit tests. We will use the busted test framework. Download instructions are above. 
+
+
+```
++-------------------------------------------------------------------------------+              +-----------------------+
+|                                                                               |              |                       |
+|  Restaurant                                                                   |              | Table                 |
+|                                                                               |     uses     |                       |
++-------------------------------------------------------------------------------+     +------> +-----------------------+
+|                                                                               |     |        |                       |
+|  - tables : Table[]                                                           +-----+        | - int SeatingCapacity |
+|                                                                               |              |                       |
+|  - timeItTakesToCleanTable : int                                              |              +-----------------------+
+|                                                                               |
+|  - openingTime : Time                                                         |              +-----------------+
+|                                                                               |              |                 |
+|  - closingTime : Time                                                         |              | Time            |
+|                                                                               |   uses       |                 |
+|  - reservations : Reservation{}                                               +------------> +-----------------+
+|                                                                               |              |                 |
++-------------------------------------------------------------------------------+              | - hour : int    |
+|                                                                               |              |                 |
+|  + CheckIfReservationIsValid(res : Reservaton) : bool                         |              | - minutes : int |
+|                                                                               |              |                 |
+|  + MakeReservation(res : Reservation) : ResId                                 |              | - day : int     |
+|                                                                               |              |                 |
+|  + ListAvailableTablesAt(startTime : Time, endTime : Time) : tables : Table[] |              | - month : int   |
+|                                                                               |              |                 |
+|  + CancelReservation(resUd : ResId) : void                                    |              | - year : int    |
+|                                                                               |              |                 |
++----------------------------------------------+--------------------------------+              +-----------------+
+                                               |
+                                               |                                                           ^
+                                               |                     +------------------------+            |
+                                               |                     |                        |            |
+                                               |                     | Reservation            |            |
+                                               |                     |                        |            |
+                                               +-------------------> +------------------------+            |
+                                                      uses           |                        |   uses     |
+                                                                     | - resId : ResId        +------------+
+                                                                     |                        |
+                                                                     | - startTime : Time     |        +------------+
+                                                                     |                        |        |            |
+                                                                     | - endTime : Time       +------> | ResId      |
+                                                                     |                        | uses   |            |
+                                                                     | - tableNum : int       |        +------------+
+                                                                     |                        |        |            |
+                                                                     | - numberOfPeople : int |        | - uuid int |
+                                                                     |                        |        |            |
+                                                                     +------------------------+        +------------+
+
+```
