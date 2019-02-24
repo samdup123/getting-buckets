@@ -21,7 +21,7 @@ describe('nonvolatile datamodel', function()
     function file_mock_object:close() end
     local file_mock = mach.mock_object(file_mock_object, 'file_mock')
 
-    it('should store default data on init if storage file is empty', function()
+    it('should store default data on init if storage file is empty, but extant', function()
         local default_data = {1, 2, 3}
         local model = {data = default_data}
         local json_string = '[1, 2, 3]'
@@ -33,6 +33,24 @@ describe('nonvolatile datamodel', function()
         .and_also(zipper.zip.should_be_called_with(json_string).and_will_return(compressed_string))
 
         .and_also(file_mock.close.should_be_called())
+        .and_also(io.open.should_be_called_with('~/file', 'w+').and_will_return(file_mock))
+        .and_also(file_mock.write.should_be_called_with(compressed_string))
+        .and_also(file_mock.close.should_be_called())
+        .when(
+            function() Datamodel({file = '~/file', items = {{'data', default_data}}}) end
+        )
+    end)
+
+    it('should store default data on init if storage file is non-existent', function()
+        local default_data = {1, 2, 3}
+        local model = {data = default_data}
+        local json_string = '[1, 2, 3]'
+        local compressed_string = 'e5;'
+
+        io.open.should_be_called_with('~/file', 'r').and_will_return(nil)
+        .and_also(json.encode.should_be_called_with(mach.match(model)).and_will_return(json_string))
+        .and_also(zipper.zip.should_be_called_with(json_string).and_will_return(compressed_string))
+
         .and_also(io.open.should_be_called_with('~/file', 'w+').and_will_return(file_mock))
         .and_also(file_mock.write.should_be_called_with(compressed_string))
         .and_also(file_mock.close.should_be_called())

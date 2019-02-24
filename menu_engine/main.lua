@@ -1,12 +1,14 @@
 package.path = '/home/sam/Dropbox/college/seanior/coding-game/menu_engine/src/?.lua;' .. package.path
 local main_font = love.graphics.newFont(24)
 local draw = require'draw_various_drawables'(love.graphics, {main_font = main_font})
-local datamodel = require'datamodel'({'current file location'})
+local datamodel = require'datamodel_volatile'({'current file location'})
 
 local menu_engine = require'menu_engine'({
     display_file_location = require'display_file_location'(function(...) love.event.push(...) end, datamodel),
     null = require'null'
 })
+
+local datamodel_nv = require'datamodel_nonvolatile'({file = '/home/sam/Dropbox/college/seanior/coding-game/bloop.txt', items = {go = 5, hey = {1,2,3}}})
 
 function love.load()
     datamodel.write('current file location', '/sam/homie-zone/level1_code.lua')
