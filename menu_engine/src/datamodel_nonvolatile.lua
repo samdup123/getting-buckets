@@ -23,12 +23,21 @@ return function(config)
         file = io.open(config.file, 'w+')
         file:write(zipper.zip(json.encode(model)))
         file:close()
+    else
+        model = json.decode(zipper.unzip(data))
+        file:close()
     end
-
+    
     return {
         read = function(label)
             if not label_map[label] then error('label "' .. label .. '" is not specified') end
             return model[label]
+        end,
+        write = function(label, new_data)
+            model[label] = new_data
+            file = io.open(config.file, 'w+')
+            file:write(zipper.zip(json.encode(model)))
+            file:close()
         end
     }
 end
