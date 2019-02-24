@@ -49,22 +49,28 @@ describe('datamodel', function()
             function() datamodel.write('data', 4) end)
     end)
 
-    it('should allow unsubscriptions', function()
+    it('should allow user to check if data exists', function()
         local datamodel = Datamodel({'data'})
-        local token1 = datamodel.subscribe_to_on_change(f)
-        local token2 = datamodel.subscribe_to_on_change(g)
-        f:should_be_called_with('data', 4)
-        :and_also(g:should_be_called_with('data', 4)):when(
-            function() datamodel.write('data', 4) end)
-
-        datamodel.unsubscribe_to_on_change(token2)
-
-        f:should_be_called_with('data', 5):when(
-            function() datamodel.write('data', 5) end)
-
-        datamodel.unsubscribe_to_on_change(token1)
-
-        nothing_should_happen_when(
-            function() datamodel.write('data', 6) end)
+        assert.is_true(datamodel.has('data'))
+        assert.is_false(datamodel.has('otherData'))
     end)
+
+    -- it('should allow unsubscriptions', function()
+    --     local datamodel = Datamodel({'data'})
+    --     local token1 = datamodel.subscribe_to_on_change(f)
+    --     local token2 = datamodel.subscribe_to_on_change(g)
+    --     f:should_be_called_with('data', 4)
+    --     :and_also(g:should_be_called_with('data', 4)):when(
+    --         function() datamodel.write('data', 4) end)
+
+    --     datamodel.unsubscribe_to_on_change(token2)
+
+    --     f:should_be_called_with('data', 5):when(
+    --         function() datamodel.write('data', 5) end)
+
+    --     datamodel.unsubscribe_to_on_change(token1)
+
+    --     nothing_should_happen_when(
+    --         function() datamodel.write('data', 6) end)
+    -- end)
 end)

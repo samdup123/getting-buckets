@@ -42,7 +42,7 @@ return function(number_of_chutes, starting_chute)
         end,
         ball_in_chute = function()
             if a_move_has_happened_since_a_tock then 
-                error('you can not know if a ball in in the chute until a time unit passes after a move')
+                error('if you try to move and check for a ball in the chute inside the same tock, you must check before moving')
             else
                 return balls_in_play[current_chute]
             end

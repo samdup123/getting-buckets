@@ -5,7 +5,8 @@ return function(items)
 
     for _,item in ipairs(items) do
         if type(item) == 'string' then
-            label_map[item] = true
+            local label = item
+            label_map[label] = true
         elseif type(item) == 'table' then
             local label = item[1]
             local default = item[2]
@@ -28,6 +29,9 @@ return function(items)
             for _,cb in ipairs(callbacks) do
                 cb(label, data)
             end
+        end,
+        has = function(label) 
+            return label_map[label] == true 
         end,
         subscribe_to_on_change = function(cb)
             table.insert(callbacks, cb)
