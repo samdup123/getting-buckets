@@ -34,6 +34,7 @@ return function(config)
             return model[label]
         end,
         write = function(label, new_data)
+            if not label_map[label] then error('label "' .. label .. '" is not specified') end
             model[label] = new_data
             file = io.open(config.file, 'w+')
             file:write(zipper.zip(json.encode(model)))

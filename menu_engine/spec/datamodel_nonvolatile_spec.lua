@@ -122,6 +122,29 @@ describe('nonvolatile datamodel', function()
         assert.are.same(new_data, datamodel.read('data'))
     end)
 
+    it('should not allow for data to be written to an unspecified label', function()
+        local default_data = {1, 2, 3}
+        local model = {data = default_data}
+        local json_string = '[1, 2, 3]'
+        local compressed_string = 'e5;'
+        local datamodel
+
+        io.open.should_be_called_with('~/file', 'r').and_will_return(file_mock)
+        .and_also(file_mock.read.should_be_called_with('a').and_will_return(nil))
+        .and_also(json.encode.should_be_called_with(mach.match(model)).and_will_return(json_string))
+        .and_also(zipper.zip.should_be_called_with(json_string).and_will_return(compressed_string))
+
+        .and_also(file_mock.close.should_be_called())
+        .and_also(io.open.should_be_called_with('~/file', 'w+').and_will_return(file_mock))
+        .and_also(file_mock.write.should_be_called_with(compressed_string))
+        .and_also(file_mock.close.should_be_called())
+        .when(
+            function() datamodel = Datamodel({file = '~/file', items = {{'data', default_data}}}) end
+        )
+
+        assert.has_error(function() datamodel.write('otherData', 6) end, 'label "otherData" is not specified')
+    end)
+
     it('should read storage file into model on init if file contains data', function()
         local default_data = {1, 2, 3}
         local model = {data = default_data}
