@@ -22,12 +22,12 @@ return function(items)
             if not label_map[label] then error('label "' .. label .. '" is not specified') end
             return model[label]
         end,
-        write = function(label, data)
+        write = function(label, new_data)
             if not label_map[label] then error('label "' .. label .. '" is not specified') end  
-            model[label] = data
+            model[label] = new_data
             
             for _,cb in ipairs(callbacks) do
-                cb(label, data)
+                cb(label, new_data)
             end
         end,
         has = function(label) 

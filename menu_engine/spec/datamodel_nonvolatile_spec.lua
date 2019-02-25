@@ -180,4 +180,77 @@ describe('nonvolatile datamodel', function()
 
         assert.are.same(default_data, datamodel.read('data'))
     end)
+
+    it('should produce an on-change event when data is written', function()
+        local default_data = {1, 2, 3}
+        local model = {data = default_data}
+        local json_string = '[1, 2, 3]'
+        local compressed_string = 'e5;'
+        local datamodel
+
+        io.open.should_be_called_with('~/file', 'r').and_will_return(file_mock)
+        .and_also(file_mock.read.should_be_called_with('a').and_will_return(nil))
+        .and_also(json.encode.should_be_called_with(mach.match(model)).and_will_return(json_string))
+        .and_also(zipper.zip.should_be_called_with(json_string).and_will_return(compressed_string))
+
+        .and_also(file_mock.close.should_be_called())
+        .and_also(io.open.should_be_called_with('~/file', 'w+').and_will_return(file_mock))
+        .and_also(file_mock.write.should_be_called_with(compressed_string))
+        .and_also(file_mock.close.should_be_called())
+        .when(
+            function() datamodel = Datamodel({file = '~/file', items = {{'data', default_data}}}) end
+        )
+
+        datamodel.subscribe_to_on_change(f)
+
+        local new_data = {3, 2, 1}
+        local new_model = {data = new_data}
+
+        json.encode.should_be_called_with(mach.match(new_model)).and_will_return(json_string)
+        .and_also(zipper.zip.should_be_called_with(json_string).and_will_return(compressed_string))
+        .and_also(io.open.should_be_called_with('~/file', 'w+').and_will_return(file_mock))
+        .and_also(file_mock.write.should_be_called_with(compressed_string))
+        .and_also(file_mock.close.should_be_called())
+        .and_also(f.should_be_called_with('data', new_data))
+        .when(
+            function() datamodel.write('data', new_data) end
+        )
+
+        datamodel.subscribe_to_on_change(g)
+
+        json.encode.should_be_called_with(mach.match(new_model)).and_will_return(json_string)
+        .and_also(zipper.zip.should_be_called_with(json_string).and_will_return(compressed_string))
+        .and_also(io.open.should_be_called_with('~/file', 'w+').and_will_return(file_mock))
+        .and_also(file_mock.write.should_be_called_with(compressed_string))
+        .and_also(file_mock.close.should_be_called())
+        .and_also(f.should_be_called_with('data', new_data))
+        .and_also(g.should_be_called_with('data', new_data))
+        .when(
+            function() datamodel.write('data', new_data) end
+        )
+    end)
+
+    it('should allow user to check if data exists', function()
+        local default_data = {1, 2, 3}
+        local model = {data = default_data}
+        local json_string = '[1, 2, 3]'
+        local compressed_string = 'e5;'
+        local datamodel
+
+        io.open.should_be_called_with('~/file', 'r').and_will_return(file_mock)
+        .and_also(file_mock.read.should_be_called_with('a').and_will_return(nil))
+        .and_also(json.encode.should_be_called_with(mach.match(model)).and_will_return(json_string))
+        .and_also(zipper.zip.should_be_called_with(json_string).and_will_return(compressed_string))
+
+        .and_also(file_mock.close.should_be_called())
+        .and_also(io.open.should_be_called_with('~/file', 'w+').and_will_return(file_mock))
+        .and_also(file_mock.write.should_be_called_with(compressed_string))
+        .and_also(file_mock.close.should_be_called())
+        .when(
+            function() datamodel = Datamodel({file = '~/file', items = {{'data', default_data}}}) end
+        )
+
+        assert.is_true(datamodel.has('data'))
+        assert.is_false(datamodel.has('otherData'))
+    end)
 end)

@@ -33,6 +33,8 @@ return function(config)
         model = json.decode(zipper.unzip(data))
         file:close()
     end
+
+    local callbacks = {}
     
     return {
         read = function(label)
@@ -45,6 +47,16 @@ return function(config)
             file = io.open(config.file, 'w+')
             file:write(zipper.zip(json.encode(model)))
             file:close()
+
+            for _,callback in ipairs(callbacks) do
+                callback(label, new_data)
+            end
+        end,
+        subscribe_to_on_change = function(cb)
+            table.insert(callbacks, cb)
+        end,
+        has = function(label)
+            return label_map[label] == true
         end
     }
 end
