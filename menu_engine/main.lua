@@ -9,6 +9,7 @@ local menu_engine = require'menu_engine'({
 })
 
 local datamodel_nv = require'datamodel_nonvolatile'({file = '/home/sam/Dropbox/college/seanior/coding-game/bloop.txt', items = {go = 5, hey = {1,2,3}}})
+datamodel_nv.write('go', 6)
 
 function love.load()
     datamodel.write('current file location', '/sam/homie-zone/level1_code.lua')

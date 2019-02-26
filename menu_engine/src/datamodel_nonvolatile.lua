@@ -9,11 +9,9 @@ return function(config)
     local label_map = {}
     local model = {}
 
-    for _,item in ipairs(items) do
-        local label = item[1]
-        local default = item[2]
+    for label,defaultData in pairs(items) do
         label_map[label] = true
-        model[label] = default
+        model[label] = defaultData
     end
 
     local file = io.open(config.file, 'r')

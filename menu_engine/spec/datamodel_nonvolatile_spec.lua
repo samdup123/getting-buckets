@@ -37,7 +37,7 @@ describe('nonvolatile datamodel', function()
         .and_also(file_mock.write.should_be_called_with(compressed_string))
         .and_also(file_mock.close.should_be_called())
         .when(
-            function() Datamodel({file = '~/file', items = {{'data', default_data}}}) end
+            function() Datamodel({file = '~/file', items = {data = default_data}}) end
         )
     end)
 
@@ -55,7 +55,7 @@ describe('nonvolatile datamodel', function()
         .and_also(file_mock.write.should_be_called_with(compressed_string))
         .and_also(file_mock.close.should_be_called())
         .when(
-            function() Datamodel({file = '~/file', items = {{'data', default_data}}}) end
+            function() Datamodel({file = '~/file', items = {data = default_data}}) end
         )
     end)
 
@@ -76,7 +76,7 @@ describe('nonvolatile datamodel', function()
         .and_also(file_mock.write.should_be_called_with(compressed_string))
         .and_also(file_mock.close.should_be_called())
         .when(
-            function() datamodel = Datamodel({file = '~/file', items = {{'data', default_data}}}) end
+            function() datamodel = Datamodel({file = '~/file', items = {data = default_data}}) end
         )
 
         assert.are.same(default_data, datamodel.read('data'))
@@ -99,7 +99,7 @@ describe('nonvolatile datamodel', function()
         .and_also(file_mock.write.should_be_called_with(compressed_string))
         .and_also(file_mock.close.should_be_called())
         .when(
-            function() datamodel = Datamodel({file = '~/file', items = {{'data', default_data}}}) end
+            function() datamodel = Datamodel({file = '~/file', items = {data = default_data}}) end
         )
 
         assert.has_error(function() datamodel.read('otherData') end, 'label "otherData" is not specified')
@@ -122,7 +122,7 @@ describe('nonvolatile datamodel', function()
         .and_also(file_mock.write.should_be_called_with(compressed_string))
         .and_also(file_mock.close.should_be_called())
         .when(
-            function() datamodel = Datamodel({file = '~/file', items = {{'data', default_data}}}) end
+            function() datamodel = Datamodel({file = '~/file', items = {data = default_data}}) end
         )
 
         local new_data = {3, 2, 1}
@@ -157,7 +157,7 @@ describe('nonvolatile datamodel', function()
         .and_also(file_mock.write.should_be_called_with(compressed_string))
         .and_also(file_mock.close.should_be_called())
         .when(
-            function() datamodel = Datamodel({file = '~/file', items = {{'data', default_data}}}) end
+            function() datamodel = Datamodel({file = '~/file', items = {data = default_data}}) end
         )
 
         assert.has_error(function() datamodel.write('otherData', 6) end, 'label "otherData" is not specified')
@@ -175,7 +175,7 @@ describe('nonvolatile datamodel', function()
         .and_also(json.decode.should_be_called_with(json_string).and_will_return(model))
         .and_also(file_mock.close.should_be_called())
         .when(
-            function() datamodel = Datamodel({file = '~/file', items = {{'data', default_data}}}) end
+            function() datamodel = Datamodel({file = '~/file', items = {data = default_data}}) end
         )
 
         assert.are.same(default_data, datamodel.read('data'))
@@ -198,7 +198,7 @@ describe('nonvolatile datamodel', function()
         .and_also(file_mock.write.should_be_called_with(compressed_string))
         .and_also(file_mock.close.should_be_called())
         .when(
-            function() datamodel = Datamodel({file = '~/file', items = {{'data', default_data}}}) end
+            function() datamodel = Datamodel({file = '~/file', items = {data = default_data}}) end
         )
 
         datamodel.subscribe_to_on_change(f)
@@ -247,7 +247,7 @@ describe('nonvolatile datamodel', function()
         .and_also(file_mock.write.should_be_called_with(compressed_string))
         .and_also(file_mock.close.should_be_called())
         .when(
-            function() datamodel = Datamodel({file = '~/file', items = {{'data', default_data}}}) end
+            function() datamodel = Datamodel({file = '~/file', items = {data = default_data}}) end
         )
 
         assert.is_true(datamodel.has('data'))
