@@ -1,7 +1,7 @@
 describe('testing the LibDeflate library wrapper called zipper', function()
 
     it('should work', function() 
-        local zipper = require'zipper'
+        local zipper = require'datamodel/zipper'
 
         local zipped = zipper.zip('howdy pardner')
 

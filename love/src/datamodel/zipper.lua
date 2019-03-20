@@ -1,4 +1,4 @@
-local LibDeflate = require'LibDeflate'
+local LibDeflate = require'datamodel/LibDeflate'
 
 return {
     zip = function(s) return LibDeflate:CompressDeflate(s) end,

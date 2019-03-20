@@ -1,7 +1,6 @@
-local check_click = require'check_click'
-
 describe('check click', function()
-
+    local check_click = require'menu/check_click'
+    
     local area = {x = 25, y = 40, width = 3, height = 12}
 
     local corners = {{x = 25, y = 40}, {x = 25, y = 52}, {x = 28, y = 40}, {x = 28, y = 52}}

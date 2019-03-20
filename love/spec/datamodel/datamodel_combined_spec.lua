@@ -1,5 +1,5 @@
 describe('combined datamodel', function()
-    local Datamodel = require'datamodel_combined'
+    local Datamodel = require'datamodel/datamodel_combined'
     local mach = require'mach'
     local datamodel_mock_table = {
         read = function() end,

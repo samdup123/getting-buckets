@@ -1,5 +1,5 @@
 describe('tests for the json.lua library', function()
-    local json = require'json'
+    local json = require'datamodel/json'
 
     it('should work', function() 
         local obj = {hey = 4, blah = {89, 90, 'yolo'}}

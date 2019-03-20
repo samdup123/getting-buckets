@@ -1,5 +1,5 @@
 describe('indirect datamodel', function()
-    local Datamodel = require'datamodel_indirect'
+    local Datamodel = require'datamodel/datamodel_indirect'
     local mach = require'mach'
 
     local read_func = mach.mock_function('read')

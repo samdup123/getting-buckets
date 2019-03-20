@@ -1,7 +1,7 @@
 describe('testing the LibDeflate library', function()
 
     it('should work', function() 
-        local LibDeflate = require'LibDeflate'
+        local LibDeflate = require'datamodel/LibDeflate'
 
         local compressed = LibDeflate:CompressDeflate('howdy pardner')
 

@@ -1,5 +1,5 @@
 describe('volatile datamodel', function()
-    local Datamodel = require'datamodel_volatile'
+    local Datamodel = require'datamodel/datamodel_volatile'
     local mach = require'mach'
     local f = mach.mock_function('callback1')
     local g = mach.mock_function('callback2')

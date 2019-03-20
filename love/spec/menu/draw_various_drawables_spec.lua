@@ -17,7 +17,7 @@ describe('draw various drawables', function()
     local fonts = {['flip'] = font_mock}
     local graphics_mock = mach.mock_table(graphics, 'graphics')
 
-    local draw = require'draw_various_drawables'(graphics_mock, fonts)
+    local draw = require'menu/draw_various_drawables'(graphics_mock, fonts)
     
     it('should correctly draw a rectangle', function()
         local rect = {mode = 'fill', x = 30, y = 40, width = 100, height = 120, red = 2, green = 3, blue = 4, alpha = 5}

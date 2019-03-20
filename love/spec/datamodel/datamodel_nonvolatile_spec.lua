@@ -5,7 +5,7 @@ describe('nonvolatile datamodel', function()
     local io = mach.mock_table({open = function() end}, 'io')
     local proxyquire = require'proxyquire'
 
-    local Datamodel = proxyquire('datamodel_nonvolatile', 
+    local Datamodel = proxyquire('datamodel/datamodel_nonvolatile', 
         {
             json = json,
             zipper = zipper,
