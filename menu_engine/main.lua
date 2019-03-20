@@ -1,10 +1,10 @@
-love.window.setFullscreen(true  )
+love.window.setFullscreen(true)
 package.path = '/home/sam/Dropbox/college/seanior/coding-game/menu_engine/src/?.lua;' .. package.path
 local main_font = love.graphics.newFont(24)
-local draw = require'draw_various_drawables'(love.graphics, {main_font = main_font})
-local datamodel = require'datamodel_volatile'({'current file location'})
+local draw = require'menu/draw_various_drawables'(love.graphics, {main_font = main_font})
+local datamodel = require'datamodel/volatile'({'current file location'})
 
-local menu_engine = require'menu_engine'({
+local menu_engine = require'menu/engine'({
     display_file_location = require'presenters/display_file_location'(function(...) love.event.push(...) end, datamodel),
     level_selection = require'presenters/level_selection'(function(...) love.event.push(...) end, datamodel),
     game = require'presenters/game'(function(...) love.event.push(...) end, datamodel),
