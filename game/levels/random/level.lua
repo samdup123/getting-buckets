@@ -1,7 +1,7 @@
-local Chutes = require'game_engine/chutes'
-local Ball_Dropper = require'game_engine/ball_dropper_random'
-local Bucket = require'game_engine/bucket'
-local game_player = require'game_engine/game_player'
+local Chutes = require'game/chutes'
+local Ball_Dropper = require'game/ball_dropper_random'
+local Bucket = require'game/bucket'
+local game_player = require'game/player'
 
 return function(player_function)
     local number_of_chutes = 9
