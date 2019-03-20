@@ -1,5 +1,5 @@
 describe('random number approximately sequential', function()
-    local Random = require'game_engine/random_number_approximately_sequential'
+    local Random = require'game/random_number_approximately_sequential'
     local mach = require'mach'
 
     local f = mach.mock_function('f')

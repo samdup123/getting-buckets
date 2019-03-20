@@ -1,5 +1,5 @@
 describe('bucket', function()
-    local Bucket = require'game_engine/bucket'
+    local Bucket = require'game/bucket'
 
     it('should return initial position until time is passed', function()
         local number_of_chutes = 10

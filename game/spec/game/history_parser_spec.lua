@@ -1,5 +1,5 @@
 describe('game history parser', function()
-    local parser = require'game_engine/game_history_parser'
+    local parser = require'game/history_parser'
 
     local game_history = {
         {

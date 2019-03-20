@@ -1,6 +1,6 @@
 describe('chutes', function()
 
-    local Chutes = require'game_engine/chutes'
+    local Chutes = require'game/chutes'
 
     it('should know how many chutes it has and how long they are', function()
         local number_of_chutes = 10

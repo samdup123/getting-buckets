@@ -1,6 +1,6 @@
 describe('random ball dropper', function()
     math.randomseed(os.time())
-    local Dropper = require'game_engine/ball_dropper_random'
+    local Dropper = require'game/ball_dropper_random'
 
     it('should drop a random ball every few tocks', function()
         local number_of_chutes = 10

@@ -1,8 +1,8 @@
 describe('game player', function()
-    local GamePlayer = require'game_engine/game_player'
-    local BallDropper = require'game_engine/ball_dropper'
-    local Chutes = require'game_engine/chutes'
-    local Bucket = require'game_engine/bucket'
+    local GamePlayer = require'game/player'
+    local BallDropper = require'game/ball_dropper'
+    local Chutes = require'game/chutes'
+    local Bucket = require'game/bucket'
     local user_code = require'fakes/user_code'
 
     it('should play a simple game', function()

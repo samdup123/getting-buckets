@@ -1,6 +1,6 @@
 describe('random number look', function()
     local mach = require'mach'
-    local Rand = require'game_engine/random_number_look'
+    local Rand = require'game/random_number_look'
     local f = mach.mock_function('f')
 
     it('should work with one call that is closer to 1', function()
