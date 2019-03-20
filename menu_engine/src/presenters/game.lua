@@ -45,6 +45,30 @@ local compile_button = button(pause_button.x + pause_button.width + 30, play_bac
 local step_button = button(compile_button.x + compile_button.width + 30, play_back_button.y)
 local play_button = button(step_button.x + step_button.width + 30, play_back_button.y)
 
+local triangle = function(top_corner, height, width, direction, white)
+    return {
+        mode = 'fill',
+
+        x1 = top_corner.x,
+        y1 = top_corner.y,
+
+        x2 = top_corner.x,
+        y2 = top_corner.y + height,
+
+        x3 = top_corner.x + (direction * width),
+        y3 = top_corner.y + (height/2),
+
+        red   = white and 255 or nil,
+        green = white and 255 or nil,
+        blue  = white and 255 or nil,
+    }
+end
+
+local play_back_triangle_1 = triangle({x = 50, y = 50}, 30, 30, -1, false)
+local play_back_triangle_2 = triangle({x = 62.5, y = 50}, 30, 30, -1, true)
+local play_back_triangle_3 = triangle({x = 72.5, y = 50}, 30, 30, -1, false)
+local play_back_triangle_4 = triangle({x = 85, y = 50}, 30, 30, -1, true)
+
 return function(release_event, datamodel)
 
     local function done_with_screen()
@@ -61,13 +85,14 @@ return function(release_event, datamodel)
             pause_button,
             compile_button,
             step_button,
-            play_back_button
+            play_back_button,
+            play_back_triangle_1,
+            play_back_triangle_2,
+            play_back_triangle_3,
+            play_back_triangle_4
         }}
     end,
     click_occurred = function(click)
-        if check_click(button_rectangle, click) then
-            done_with_screen()
-        end
     end
     }
 end
