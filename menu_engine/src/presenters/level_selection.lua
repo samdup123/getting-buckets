@@ -29,10 +29,6 @@ local drawables = {
     level_3_box, three
 }
 
-for k, drawable in ipairs(drawables) do 
-    print(drawable.x) 
-end
-
 return function(release_event, datamodel)
 
     local function done_with_screen()

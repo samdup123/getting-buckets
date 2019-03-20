@@ -22,6 +22,15 @@ return function (menus)
                 current_menu = menus.display_file_location
             end,
             job_complete = function()
+                fsm.transition(state.game)
+            end,
+        },
+
+        game = {
+            entry = function()
+                current_menu = menus.game
+            end,
+            job_complete = function()
                 current_menu = menus.null
             end,
         },
