@@ -7,7 +7,7 @@ return function(controller, debug)
         controller['move_' .. direction_of_movement]()
     end
 
-    while true do
+    return function()
         if current_chute == 1 then
             direction_of_movement = 'right'
         elseif current_chute == last_chute then
@@ -18,7 +18,5 @@ return function(controller, debug)
             move()
         end
         current_chute = controller.current_chute()
-
-        coroutine.yield()
     end
 end

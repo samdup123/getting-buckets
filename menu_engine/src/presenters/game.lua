@@ -151,6 +151,7 @@ return function(release_event, datamodel)
         }}
     end,
     click_occurred = function(click)
+        --do nothing
     end
     }
 end

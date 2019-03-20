@@ -16,18 +16,8 @@ return function(player_function)
     local bucket = Bucket(number_of_chutes, starting_chute)
     local controller = bucket.controller()
 
-    local player_coroutine = coroutine.create(player_function)
-    local status, err
-    local played_at_least_once = false
-    function run_user_code()
-        if not played_at_least_once then
-            status, err = coroutine.resume(player_coroutine, controller)
-        else
-            status, err = coroutine.resume(player_coroutine)
-        end
-        if not status then print('ERROR!!!\n\t' .. err) end
-            played_at_least_once = true
-    end
+    local null_debug = function() end
+    local run_user_code =  player_function(controller, null_debug)
 
     local game_history, board_info, player_won = game_player(ball_dropper, chutes, bucket, run_user_code)
 
