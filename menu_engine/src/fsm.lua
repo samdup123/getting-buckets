@@ -9,9 +9,13 @@ return function(initial_state)
     end
 
     local function transition(target)
-        current_state.exit()
+        if current_state.exit then
+            current_state.exit()
+        end
         current_state = target
-        current_state.entry()
+        if current_state.entry then
+            current_state.entry()
+        end
     end
 
     signal('entry')

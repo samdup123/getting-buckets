@@ -5,7 +5,18 @@ return function (menus)
     if instantiated then error('the menu engine is a singleton') end
     instantiated = true
 
-    local state = {
+    local fsm, state
+
+    state = {
+        level_selection = {
+            entry = function()
+                current_menu = menus.level_selection
+            end,
+            job_complete = function()
+                fsm.transition(state.display_file_location)
+            end
+        },
+
         display_file_location = {
             entry = function()
                 current_menu = menus.display_file_location
@@ -16,7 +27,7 @@ return function (menus)
         },
     }
 
-    local fsm = Fsm(state.display_file_location)
+    fsm = Fsm(state.level_selection)
 
     return {
         pass_menu_state_event = function(event) fsm.signal(event) end,
