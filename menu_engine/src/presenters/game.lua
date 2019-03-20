@@ -111,6 +111,13 @@ local center_y_s_button = center_y(step_button) - height_of_icons/2
 
 local step_triangle = triangle({x = center_x_s_button, y = center_y_s_button}, width_of_icons, height_of_icons, 1, false)
 
+local compile_label = {
+    string = 'compile',
+    font = 'main_font',
+    x = center_x(compile_button),
+    y = center_y(compile_button)
+}
+
 return function(release_event, datamodel)
 
     local function done_with_screen()
@@ -139,7 +146,8 @@ return function(release_event, datamodel)
             play_triangle_2,
             play_triangle_1,
             step_back_triangle,
-            step_triangle
+            step_triangle,
+            compile_label
         }}
     end,
     click_occurred = function(click)
