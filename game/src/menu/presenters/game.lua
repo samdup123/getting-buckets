@@ -1,6 +1,6 @@
 local check_click = require'menu/check_click'
 
-local game_rectangle = {
+local game_rect = {
     mode = 'fill',
     x = 10,
     y = 10,
@@ -12,12 +12,12 @@ local game_rectangle = {
     blue = 255
 }
 
-local console_rectangle = {
+local console_rect = {
     mode = 'fill',
-    x = game_rectangle.x + game_rectangle.width + 10,
-    y = game_rectangle.y,
+    x = game_rect.x + game_rect.width + 10,
+    y = game_rect.y,
     width = 450,
-    height = game_rectangle.height,
+    height = game_rect.height,
 
     red = 255,
     green = 255,
@@ -38,7 +38,7 @@ local button = function(x,y)
     }
 end
 
-local play_back_button = button(game_rectangle.x + 350, game_rectangle.y + game_rectangle.height + 30)
+local play_back_button = button(game_rect.x + 350, game_rect.y + game_rect.height + 30)
 local step_back_button = button(play_back_button.x + play_back_button.width + 30, play_back_button.y)
 local pause_button = button(step_back_button.x + step_back_button.width + 30, play_back_button.y)
 local compile_button = button(pause_button.x + pause_button.width + 30, play_back_button.y)
@@ -120,9 +120,9 @@ local compile_label = {
 
 local speed_bar = {
     mode = 'fill',
-    x = game_rectangle.x + 325,
-    y = game_rectangle.y + game_rectangle.height + 155,
-    width = game_rectangle.width + console_rectangle.width - 535,
+    x = game_rect.x + 325,
+    y = game_rect.y + game_rect.height + 155,
+    width = game_rect.width + console_rect.width - 535,
     height = 15,
 
     red = 255,
@@ -141,16 +141,52 @@ local speed_toggle = {
     blue = 1
 }
 
+local chutes_rect = {
+    mode = 'fill',
+    x = game_rect.x + 10,
+    y = game_rect.y + 10,
+    width = game_rect.width - 20,
+    height = 0,
+
+    red = 1,
+    blue = 1
+}
+
+local bucket_rect = {
+    mode = 'fill',
+    x = chutes_rect.x,
+    y = 0,
+    width = 0,
+    height = 0
+}
+
+local number_of_chutes
+
+local datamodel_on_change_callback = function(label, data)
+    if label == 'current level environment' then
+        number_of_chutes = data.chutes.info().number_of_chutes
+
+        local width_of_bucket = chutes_rect.width / number_of_chutes
+        bucket_rect.width = width_of_bucket
+        bucket_rect.height = width_of_bucket
+
+        chutes_rect.height = game_rect.y + game_rect.height - 40 - width_of_bucket
+        bucket_rect.y = chutes_rect.y + chutes_rect.height
+    end
+end
+
 return function(release_event, datamodel)
+    datamodel.subscribe_to_on_change(datamodel_on_change_callback)
+
     local function done_with_screen()
-          release_event('menu_event', 'job_complete')
-      end
+        release_event('menu_event', 'job_complete')
+    end
 
       return {
       get_current_screen = function()
           return {drawables = {
-              game_rectangle,
-              console_rectangle,
+              game_rect,
+              console_rect,
               play_back_button,
               step_back_button,
               pause_button,
@@ -171,7 +207,9 @@ return function(release_event, datamodel)
               step_triangle,
               compile_label,
               speed_bar,
-              speed_toggle
+              speed_toggle,
+              chutes_rect,
+              bucket_rect
           }}
       end,
       click_occurred = function(click)
