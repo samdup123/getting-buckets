@@ -1,11 +1,24 @@
 love.window.setFullscreen(true)
 
 -- set the package path to collect source code
-package.path = '/home/sam/Dropbox/college/seanior/coding-game/game/src/?.lua;' .. package.path
+package.path = '/Users/samduplessis/APLACE/getting-buckets/game/src/?.lua;' .. package.path
 
 local main_font = love.graphics.newFont(24)
 local draw = require'menu/draw_various_drawables'(love.graphics, {main_font = main_font})
-local datamodel = require'datamodel/volatile'({'current file location'})
+local datamodel = require'datamodel/volatile'(
+  {
+    'current file location',
+    {'current window size',
+      {
+        width = love.graphics.getWidth(),
+        height = love.graphics.getHeight(),
+      }},
+     'current user code',
+     'current level environment',
+     'current game history',
+     'player won last game'
+  }
+)
 
 local menu_engine = require'menu/engine'({
     display_file_location = require'menu/presenters/display_file_location'(function(...) love.event.push(...) end, datamodel),
@@ -14,67 +27,65 @@ local menu_engine = require'menu/engine'({
     null = require'menu/presenters/null'
 })
 
+local game_engine = require'game/engine'(require'game/player', datamodel)
+
 math.randomseed(os.time())
 
-local player_code = require'levels/random/player'
-local level1 = require'levels/random/level'
+local current_user_code =
+    [[return function(controller, debug)
+        local current_chute = controller.current_chute()
+        local last_chute = controller.number_of_chutes()
+        local direction_of_movement = 'left'
+
+        local function move()
+            controller['move_' .. direction_of_movement]()
+        end
+
+        return function()
+            if current_chute == 1 then
+                direction_of_movement = 'right'
+            elseif current_chute == last_chute then
+                direction_of_movement = 'left'
+            end
+
+            if not controller.ball_in_chute() then
+                move()
+            end
+            current_chute = controller.current_chute()
+        end
+    end]]
 
 function love.load(arg)
-    game_history, game_info, player_won = level1(player_code)
-    print(player_won and "player won!" or "player lost!")
+  datamodel.write('current file location', '/sam/homie-zone/level1_code.lua')
 
-    width_of_chute = 18
-    distance_unit = width_of_chute
-    chute_rect = {start_x = 10, start_y = 10, width = width_of_chute * game_info.number_of_chutes, height = distance_unit * game_info.length_of_chutes}
-    bucket_rect = {start_y = chute_rect.start_y + chute_rect.height, width = width_of_chute, height = distance_unit}
-    ball = {radius = width_of_chute / 2}
-    time = 0
+  love.handlers.menu_event = love.menu_event
+  love.handlers.game_play_event = love.game_play_event
 
-    game_time_state = 1
+  datamodel.write('current user code', current_user_code)
+  local random_level_environment = require'levels/random/environment'
+  local user_function = load(current_user_code)()
+  local env = random_level_environment(user_function)
+  datamodel.write('current level environment', env)
 end
 
 function love.update(dt)
-    time = time + dt
-    if time > .01 then
-        time = 0
-        game_time_state = game_time_state + 1
-    end
-end
-
-local function draw_rectangle(mode, rect)
-    love.graphics.rectangle(mode, rect.start_x, rect.start_y, rect.width, rect.height)
-end
-
-local function draw_ball(chute_num, location)
-    love.graphics.circle(
-        'fill',
-        chute_rect.start_x + (chute_num - .5) * width_of_chute,
-        chute_rect.start_y + (location - .5) * distance_unit,
-        ball.radius
-    )
 end
 
 function love.draw()
-    love.graphics.setColor(1,0,1)
-    
-    draw_rectangle('fill', chute_rect)
+  local screen = menu_engine.get_current_screen()
+  for i,drawable in ipairs(screen.drawables) do
+      draw(drawable)
+  end
+end
 
-    love.graphics.setColor(1,1,1)
+function love.mousepressed(x,y)
+    menu_engine.pass_click_event({x = x, y = y})
+end
 
-    if game_time_state <= #game_history then
-        local moment = game_history[game_time_state]
-    
-        for _,ball in ipairs(moment.balls_in_play) do
-            draw_ball(ball.chute, ball.location)
-        end
-    
-        -- draw bucket
-        love.graphics.rectangle(
-            'fill', 
-            chute_rect.start_x + ((moment.bucket_position - 1) * width_of_chute), 
-            bucket_rect.start_y, 
-            bucket_rect.width, 
-            bucket_rect.height
-        )
-    end
+function love.menu_event(event)
+    menu_engine.pass_menu_state_event(event)
+end
+
+function love.game_play_event(event)
+    game_engine.game_play_requested()
 end

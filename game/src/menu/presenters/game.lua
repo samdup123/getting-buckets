@@ -4,8 +4,8 @@ local game_rectangle = {
     mode = 'fill',
     x = 10,
     y = 10,
-    width = 1100,
-    height = 875,
+    width = 875,
+    height = 675,
 
     red = 255,
     green = 255,
@@ -16,7 +16,7 @@ local console_rectangle = {
     mode = 'fill',
     x = game_rectangle.x + game_rectangle.width + 10,
     y = game_rectangle.y,
-    width = 650,
+    width = 450,
     height = game_rectangle.height,
 
     red = 255,
@@ -24,7 +24,7 @@ local console_rectangle = {
     blue = 255
 }
 
-local button = function(x,y) 
+local button = function(x,y)
     return {
         mode = 'fill',
         x = x,
@@ -38,7 +38,7 @@ local button = function(x,y)
     }
 end
 
-local play_back_button = button(game_rectangle.x + 500, game_rectangle.y + game_rectangle.height + 30)
+local play_back_button = button(game_rectangle.x + 350, game_rectangle.y + game_rectangle.height + 30)
 local step_back_button = button(play_back_button.x + play_back_button.width + 30, play_back_button.y)
 local pause_button = button(step_back_button.x + step_back_button.width + 30, play_back_button.y)
 local compile_button = button(pause_button.x + pause_button.width + 30, play_back_button.y)
@@ -118,40 +118,66 @@ local compile_label = {
     y = center_y(compile_button)
 }
 
+local speed_bar = {
+    mode = 'fill',
+    x = game_rectangle.x + 325,
+    y = game_rectangle.y + game_rectangle.height + 155,
+    width = game_rectangle.width + console_rectangle.width - 535,
+    height = 15,
+
+    red = 255,
+    green = 255,
+    blue = 255
+}
+
+local speed_toggle = {
+    mode = 'fill',
+    x = speed_bar.x + 100,
+    y = speed_bar.y,
+    width = speed_bar.height,
+    height = speed_bar.height,
+
+    red = 255,
+    blue = 1
+}
+
 return function(release_event, datamodel)
-
     local function done_with_screen()
-        release_event('menu_event', 'job_complete')
-    end
+          release_event('menu_event', 'job_complete')
+      end
 
-    return {
-    get_current_screen = function()
-        return {drawables = {
-            game_rectangle,
-            console_rectangle,
-            play_back_button,
-            step_back_button,
-            pause_button,
-            compile_button,
-            step_button,
-            play_button,
-            pause_button_rectangle_1,
-            pause_button_rectangle_2,
-            play_back_triangle_1,
-            play_back_triangle_2,
-            play_back_triangle_3,
-            play_back_triangle_4,
-            play_triangle_4,
-            play_triangle_3,
-            play_triangle_2,
-            play_triangle_1,
-            step_back_triangle,
-            step_triangle,
-            compile_label
-        }}
-    end,
-    click_occurred = function(click)
-        --do nothing
-    end
-    }
+      return {
+      get_current_screen = function()
+          return {drawables = {
+              game_rectangle,
+              console_rectangle,
+              play_back_button,
+              step_back_button,
+              pause_button,
+              compile_button,
+              step_button,
+              play_button,
+              pause_button_rectangle_1,
+              pause_button_rectangle_2,
+              play_back_triangle_1,
+              play_back_triangle_2,
+              play_back_triangle_3,
+              play_back_triangle_4,
+              play_triangle_4,
+              play_triangle_3,
+              play_triangle_2,
+              play_triangle_1,
+              step_back_triangle,
+              step_triangle,
+              compile_label,
+              speed_bar,
+              speed_toggle
+          }}
+      end,
+      click_occurred = function(click)
+          if check_click(play_button, click) then
+              release_event('game_play_event')
+          end
+      end
+      }
 end
