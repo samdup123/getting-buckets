@@ -213,7 +213,7 @@ return function(release_event, datamodel)
           }}
       end,
       click_occurred = function(click)
-          if check_click(play_button, click) then
+          if check_click(compile_button, click) then
               release_event('game_play_event')
           end
       end

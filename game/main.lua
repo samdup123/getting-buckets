@@ -16,7 +16,8 @@ local datamodel = require'datamodel/volatile'(
      'current user code',
      'current level environment',
      'current game history',
-     'player won last game'
+     'player won last game',
+     {'time', 0}
   }
 )
 
@@ -68,7 +69,15 @@ function love.load(arg)
   datamodel.write('current level environment', env)
 end
 
+
+local time = 0
+local last_time = time
 function love.update(dt)
+    time = time + dt
+    if time - last_time >= .01 then
+        last_time = time
+        datamodel.write('time', time)
+    end
 end
 
 function love.draw()

@@ -14,12 +14,12 @@ describe('engine', function()
 
         local engine = Engine(player, datamodel)
 
-        datamodel.read.should_be_called_with('current_game_environment')
+        datamodel.read.should_be_called_with('current level environment')
         .and_will_return(env)
         .and_also(player.should_be_called_with(env.ball_dropper, env.chutes, env.bucket, env.user_function)
-            .and_will_return('history', 'info', 'player_won'))
-        .and_also(datamodel.write.should_be_called_with('current_game_history', 'history'))
-        .and_also(datamodel.write.should_be_called_with('player_won_last_game', 'player_won'))
+            .and_will_return(14, 15, 16))
+        .and_also(datamodel.write.should_be_called_with('current game history', 14))
+        .and_also(datamodel.write.should_be_called_with('player won last game', 16))
         .when(
             function() engine.game_play_requested() end
         )
