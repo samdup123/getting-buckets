@@ -1,6 +1,6 @@
 describe('time', function()
     local Time = require'utils/time'
-    local timer = Time.timer_dispenser()
+    local timer = Time.timer_dispensary()
     local mach = require'mach'
 
     local f = mach.mock_function('f')

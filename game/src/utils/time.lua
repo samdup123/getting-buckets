@@ -23,12 +23,9 @@ local function add_timer(time, callback, token)
             table.insert(timers, new_timer)
         end
     end
-
-    -- print('all timers')
-    -- for index,timer in ipairs(timers) do print(timer.time) end
 end
 
-local function add_one_time_timer(period, callback, token)
+local function create_timer(period, callback, token)
     if not token then
         token = token_generation
         token_generation = token_generation + 1
@@ -71,16 +68,16 @@ if not initialized then
             timers = {}
         end,
 
-        timer_dispenser = function()
+        timer_dispensary = function()
             return {
-                one_time = add_one_time_timer,
+                one_time = function(period, callback) return create_timer(period, callback) end,
                 repeating = function(period, callback)
                     local new_callback, token
                     new_callback = function()
                         callback()
-                        add_one_time_timer(period, new_callback, token)
+                        create_timer(period, new_callback, token)
                     end
-                    token = add_one_time_timer(period, new_callback)
+                    token = create_timer(period, new_callback)
                     return token
                 end,
                 stop = remove_timer
