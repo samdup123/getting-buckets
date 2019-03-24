@@ -8,16 +8,25 @@ local function add_timer(time, callback)
     if #timers == 0 then
         table.insert(timers, {time = time, callback = callback})
     else
+        local inserted = false
         for index,timer in ipairs(timers) do
             if time <= timer.time then
+                inserted = true
                 table.insert(timers, index, {time = time, callback = callback})
                 break
             end
+        end
+        if not inserted then
+            table.insert(timers, {time = time, callback = callback})
         end
     end
 
     -- print('all timers')
     -- for index,timer in ipairs(timers) do print(timer.time) end
+end
+
+local function add_one_time_timer(period, callback)
+    add_timer(current_time + period, callback)
 end
 
 if not initialized then
@@ -45,12 +54,16 @@ if not initialized then
             timers = {}
         end,
 
-        current_time = function() return current_time end,
-
         timer_dispenser = function()
             return {
-                one_time = function(period, callback)
-                    add_timer(current_time + period, callback)
+                one_time = add_one_time_timer,
+                repeating = function(period, callback)
+                    local new_callback
+                    new_callback = function()
+                        callback()
+                        add_one_time_timer(period, new_callback)
+                    end
+                    add_one_time_timer(period, new_callback)
                 end
             }
         end

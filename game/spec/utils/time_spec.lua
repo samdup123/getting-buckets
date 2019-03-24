@@ -5,30 +5,33 @@ describe('time', function()
     local f = mach.mock_function('f')
     local g = mach.mock_function('g')
 
-    local function after(time)
-        Time.update(Time.current_time() + time)
+    local time = 0
+    local function after(new_time)
+        time = time + new_time
+        Time.update(time)
     end
 
     local function nothing_should_happen_when(f) f() end
 
     before_each(function()
         Time.reset()
+        time = 0
     end)
 
-    it('should allow a one time timer to be created', function()
-        local timer = Time.timer_dispenser()
-        timer.one_time(8, f)
-
-        nothing_should_happen_when(
-            function() after(7) end
-        )
-
-        f.should_be_called()
-        .when(
-            function() after(1) end
-        )
-    end)
-
+    -- it('should allow a one time timer to be created', function()
+    --     local timer = Time.timer_dispenser()
+    --     timer.one_time(8, f)
+    --
+    --     nothing_should_happen_when(
+    --         function() after(7) end
+    --     )
+    --
+    --     f.should_be_called()
+    --     .when(
+    --         function() after(1) end
+    --     )
+    -- end)
+    --
     -- it('should allow multiple one time timers to be created (out of order)', function()
     --     local timer = Time.timer_dispenser()
     --     timer.one_time(8, f)
@@ -39,17 +42,39 @@ describe('time', function()
     --     )
     --
     --     g.should_be_called()
-    --     .when(
-    --         function() after(1) end
-    --     )
+    --     .when(function() after(1) end)
     --
     --     nothing_should_happen_when(
     --         function() after(2) end
     --     )
     --
     --     f.should_be_called()
-    --     .when(
-    --         function() after(1) end
-    --     )
+    --     .when(function() after(1) end)
     -- end)
+
+    it('should allow a repeating timer to be created', function()
+        local timer = Time.timer_dispenser()
+        timer.repeating(8, f)
+
+        nothing_should_happen_when(
+            function() after(7) end
+        )
+
+        f.should_be_called()
+        .when(function() after(1) end)
+
+        nothing_should_happen_when(
+            function() after(7) end
+        )
+
+        f.should_be_called()
+        .when(function() after(1) end)
+        --
+        -- nothing_should_happen_when(
+        --     function() after(7) end
+        -- )
+        --
+        -- f.should_be_called()
+        -- .when(function() after(1) end)
+    end)
 end)
