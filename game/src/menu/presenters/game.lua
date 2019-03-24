@@ -161,28 +161,61 @@ local bucket_rect = {
 }
 
 local number_of_chutes
+local balls = {}
+local history
+local time_between_frames = .4
+local current_timer_token
+local current_fame = 0
 
 local datamodel_on_change_callback = function(label, data)
     if label == 'current level environment' then
         number_of_chutes = data.chutes.info().number_of_chutes
+        
 
+        local height_of_bucket = chutes_rect.height /
         local width_of_bucket = chutes_rect.width / number_of_chutes
         bucket_rect.width = width_of_bucket
         bucket_rect.height = width_of_bucket
 
         chutes_rect.height = game_rect.y + game_rect.height - 40 - width_of_bucket
         bucket_rect.y = chutes_rect.y + chutes_rect.height
+    elseif label == 'current game history' then
+        print('the current game history just came in through the on change event', #data)
+        history = data
     end
 end
 
-return function(release_event, datamodel)
+local function update_game_frame()
+    print('updating game frame')
+    if history then
+        print('in here doing it')
+        current_fame = current_fame + 1
+        balls = {}
+        for _,ball in ipairs(history[current_fame].balls_in_play) do
+            table.insert(balls,
+                {
+                    mode = 'fill',
+                    r = bucket_rect.width / 2,
+                    x = (ball.chute - .5) * bucket_rect.width + chutes_rect.x,
+                    y = (ball.location - .5) * bucket_rect.height + chutes_rect.y,
+                    red = 255, green = 255, blue = 255
+                }
+            )
+        end
+        print('#balls', #balls)
+
+        bucket_rect.x = (history[current_fame].bucket_position - 1) * bucket_rect.width + chutes_rect.x
+    end
+end
+
+return function(release_event, datamodel, timer_dispensary)
     datamodel.subscribe_to_on_change(datamodel_on_change_callback)
 
     local function done_with_screen()
         release_event('menu_event', 'job_complete')
     end
 
-      return {
+    return {
       get_current_screen = function()
           return {drawables = {
               game_rect,
@@ -209,12 +242,15 @@ return function(release_event, datamodel)
               speed_bar,
               speed_toggle,
               chutes_rect,
-              bucket_rect
+              bucket_rect,
+              unpack(balls)
           }}
       end,
       click_occurred = function(click)
           if check_click(compile_button, click) then
               release_event('game_play_event')
+          elseif check_click(play_button, click) then
+              current_timer_token = timer_dispensary.repeating(time_between_frames, update_game_frame)
           end
       end
       }

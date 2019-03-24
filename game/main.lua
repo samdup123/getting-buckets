@@ -16,15 +16,17 @@ local datamodel = require'datamodel/volatile'(
      'current user code',
      'current level environment',
      'current game history',
-     'player won last game',
-     {'time', 0}
+     'player won last game'
   }
 )
+
+local Time = require'utils/time'
+local timer_dispensary = Time.timer_dispensary()
 
 local menu_engine = require'menu/engine'({
     display_file_location = require'menu/presenters/display_file_location'(function(...) love.event.push(...) end, datamodel),
     level_selection = require'menu/presenters/level_selection'(function(...) love.event.push(...) end, datamodel),
-    game = require'menu/presenters/game'(function(...) love.event.push(...) end, datamodel),
+    game = require'menu/presenters/game'(function(...) love.event.push(...) end, datamodel, timer_dispensary),
     null = require'menu/presenters/null'
 })
 
@@ -76,7 +78,7 @@ function love.update(dt)
     time = time + dt
     if time - last_time >= .01 then
         last_time = time
-        datamodel.write('time', time)
+        Time.update(time)
     end
 end
 
