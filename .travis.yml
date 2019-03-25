@@ -17,6 +17,7 @@ before_install:
   - source .travis/setenv_lua.sh
   - pip install --user cpp-coveralls
   - luarocks install Lua-cURL         --server=https://luarocks.org/dev
+  - luarocks install Lua-cURL
   - luarocks install luacov-coveralls --server=https://luarocks.org/dev
   - luarocks install busted
   - luarocks install mach
