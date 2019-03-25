@@ -20,7 +20,7 @@ before_install:
   - luarocks install luacov-coveralls --server=https://luarocks.org/dev
   - luarocks install busted
   - luarocks install mach
-  - luarocks install Lua-cURL
+  - luarocks install proxyquire
 
 script:
   - cd game
