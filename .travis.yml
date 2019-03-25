@@ -23,7 +23,7 @@ before_install:
   - luarocks install Lua-cURL
 
 script:
-  - cd love
+  - cd game
   - lua -e "print(require'cURL'.version())"
   - busted .
 
