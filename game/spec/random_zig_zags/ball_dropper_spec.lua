@@ -1,4 +1,4 @@
-describe('random zig zag ball dropper', function() 
+describe('random zig zag ball dropper', function()
     local ball_dropper = require'menu/random_zig_zags/ball_dropper'
 
     it('should work', function()
@@ -9,14 +9,14 @@ describe('random zig zag ball dropper', function()
         local random = math.random
         local gantt = ball_dropper(
             number_of_chutes,
-            number_of_balls_to_drop, 
-            number_of_zig_zags, 
-            tocks_between_zig_zags, 
+            number_of_balls_to_drop,
+            number_of_zig_zags,
+            tocks_between_zig_zags,
             random
         )
 
         for i = 1, #gantt do
-            -- print('fart', gantt[i])
+        
         end
     end)
 end)
