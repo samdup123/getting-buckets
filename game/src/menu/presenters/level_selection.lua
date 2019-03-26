@@ -1,6 +1,6 @@
 local check_click = require'menu/check_click'
-local level_number_rectangle = 
-    function(number, x, y, width, height) 
+local level_number_rectangle =
+    function(number, x, y, width, height)
         local box = {mode = 'fill', x = x, y = y, width = width, height = height, red = 100}
         local label = {
             string = tostring(number),
@@ -40,8 +40,9 @@ return function(release_event, datamodel)
         return {drawables = drawables}
     end,
     click_occurred = function(click)
-        for _,box in ipairs(boxes) do
+        for index,box in ipairs(boxes) do
             if check_click(box, click) then
+                datamodel.write('current level number', index)
                 done_with_screen()
             end
         end

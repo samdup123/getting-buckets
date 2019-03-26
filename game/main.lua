@@ -1,5 +1,23 @@
 love.window.setFullscreen(true)
 
+local os_process_file = assert(io.popen('pwd', 'r'))
+local working_directory = os_process_file:read('*all')
+os_process_file:close()
+
+local does_user_code_folder_exist = [[if [ -d ]] .. working_directory:sub(1, #working_directory - 1) .. '/user_code' .. [[ ]; then
+    echo 1
+else
+    echo 0
+fi]]
+
+os_process_file = assert(io.popen(does_user_code_folder_exist))
+local it_exists = tonumber(os_process_file:read('*all')) == 1 and true or false
+os_process_file:close()
+
+if not it_exists then
+    os_process_file = assert(io.popen('mkdir user_code'))
+end
+
 -- set the package path to collect source code
 package.path = '/Users/samduplessis/APLACE/getting-buckets/game/src/?.lua;' .. package.path
 
@@ -15,6 +33,7 @@ local datamodel = require'datamodel/volatile'(
       }},
      'current user code',
      'current level environment',
+     'current level number',
      'current game history',
      'player won last game'
   }

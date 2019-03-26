@@ -5,12 +5,22 @@ local file_location_text = {font = 'main_font', x = 400, y = 100, red = 25, blue
 
 return function(release_event, datamodel)
 
+    local current_file_location = datamodel.read('current file location')
+
+    local function datamodel_on_change(label, data)
+        if label == 'current file location' then
+            current_file_location = data
+        end
+    end
+
+    datamodel.subscribe_to_on_change(datamodel_on_change)
+
     local function done_with_screen()
         release_event('menu_event', 'job_complete')
     end
 
     local function add_file_location(text)
-        text.string = 'Your file is located at ' .. datamodel.read('current file location')
+        text.string = 'Your file is located at ' .. current_file_location
         return text
     end
 
