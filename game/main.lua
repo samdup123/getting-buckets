@@ -4,28 +4,17 @@ local os_process_file = assert(io.popen('pwd', 'r'))
 local working_directory = os_process_file:read('*all')
 os_process_file:close()
 
-local does_user_code_folder_exist = [[if [ -d ]] .. working_directory:sub(1, #working_directory - 1) .. '/user_code' .. [[ ]; then
-    echo 1
-else
-    echo 0
-fi]]
-
-os_process_file = assert(io.popen(does_user_code_folder_exist))
-local it_exists = tonumber(os_process_file:read('*all')) == 1 and true or false
-os_process_file:close()
-
-if not it_exists then
-    os_process_file = assert(io.popen('mkdir user_code'))
-end
+os_process_file = assert(io.popen('mkdir user_code'))
 
 -- set the package path to collect source code
 package.path = '/Users/samduplessis/APLACE/getting-buckets/game/src/?.lua;' .. package.path
+
+local file_manager = require'menu/file_manager'(working_directory .. '/user_code', datamodel)
 
 local main_font = love.graphics.newFont(24)
 local draw = require'menu/draw_various_drawables'(love.graphics, {main_font = main_font})
 local datamodel = require'datamodel/volatile'(
   {
-    'current file location',
     {'current window size',
       {
         width = love.graphics.getWidth(),
@@ -35,7 +24,9 @@ local datamodel = require'datamodel/volatile'(
      'current level environment',
      'current level number',
      'current game history',
-     'player won last game'
+     'player won last game',
+     'current file location',
+     {'file separator', '/'}
   }
 )
 
