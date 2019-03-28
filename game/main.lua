@@ -34,7 +34,10 @@ local Time = require'utils/time'
 local timer_dispensary = Time.timer_dispensary()
 
 local menu_engine = require'menu/engine'({
-    display_file_location = require'menu/presenters/display_file_location'(function(...) love.event.push(...) end, datamodel),
+    display_file_location = require'menu/presenters/display_file_location'(
+        function(...) love.event.push(...) end,
+        datamodel),
+        file_manager),
     level_selection = require'menu/presenters/level_selection'(function(...) love.event.push(...) end, datamodel),
     game = require'menu/presenters/game'(function(...) love.event.push(...) end, datamodel, timer_dispensary),
     null = require'menu/presenters/null'

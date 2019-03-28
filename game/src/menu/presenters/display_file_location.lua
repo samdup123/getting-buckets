@@ -3,7 +3,7 @@ local button_rectangle = {mode = 'fill', x = 200, y = 200, width = 100, height =
 local button_text = {string = 'done', font = 'main_font', x = 250, y = 250, blue = 100}
 local file_location_text = {font = 'main_font', x = 400, y = 100, red = 25, blue = 100}
 
-return function(release_event, datamodel)
+return function(release_event, datamodel, file_manager)
 
     local current_file_location = datamodel.read('current file location')
 
