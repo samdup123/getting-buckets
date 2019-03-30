@@ -1,5 +1,6 @@
 love.window.setFullscreen(true)
 
+
 local os_process_file = assert(io.popen('pwd', 'r'))
 local working_directory = os_process_file:read('*all')
 working_directory = working_directory:sub(1, #working_directory - 1)
@@ -26,7 +27,8 @@ local datamodel = require'datamodel/volatile'(
      'current game history',
      'player won last game',
      'current file location',
-     {'file separator', '/'}
+     {'file separator', '/'},
+     {'lua version', tonumber(_VERSION:sub(#_VERSION - 2, #_VERSION))}
   }
 )
 
@@ -74,8 +76,6 @@ local current_user_code =
     end]]
 
 function love.load(arg)
-  datamodel.write('current file location', '/sam/homie-zone/level1_code.lua')
-
   love.handlers.menu_event = love.menu_event
   love.handlers.game_play_event = love.game_play_event
 
@@ -113,5 +113,8 @@ function love.menu_event(event)
 end
 
 function love.game_play_event(event)
+    local location = datamodel.read('current file location')
+    current_user_code = file_manager.read(location)
+    datamodel.write('current user code', current_user_code)
     game_engine.game_play_requested()
 end

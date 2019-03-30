@@ -8,7 +8,9 @@ return function(release_event, datamodel, file_manager)
     local current_file_location
     local function datamodel_on_change(label, data)
         if label == 'current level number' then
-            current_file_location = file_manager.open('level' .. data .. '.lua')
+            local file_name = 'level' .. data .. '.lua'
+            current_file_location = file_manager.open(file_name)
+            datamodel.write('current file location', file_name)
         end
     end
 
