@@ -5,11 +5,10 @@ local file_location_text = {font = 'main_font', x = 400, y = 100, red = 25, blue
 
 return function(release_event, datamodel, file_manager)
 
-    local current_file_location = datamodel.read('current file location')
-
+    local current_file_location
     local function datamodel_on_change(label, data)
-        if label == 'current file location' then
-            current_file_location = data
+        if label == 'current level number' then
+            current_file_location = file_manager.open('level' .. data .. '.lua')
         end
     end
 
@@ -20,7 +19,7 @@ return function(release_event, datamodel, file_manager)
     end
 
     local function add_file_location(text)
-        text.string = 'Your file is located at ' .. current_file_location
+        text.string = 'Your file is located at ' .. (current_file_location or '')
         return text
     end
 

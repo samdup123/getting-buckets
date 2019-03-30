@@ -2,14 +2,14 @@ love.window.setFullscreen(true)
 
 local os_process_file = assert(io.popen('pwd', 'r'))
 local working_directory = os_process_file:read('*all')
+working_directory = working_directory:sub(1, #working_directory - 1)
 os_process_file:close()
 
 os_process_file = assert(io.popen('mkdir user_code'))
+os_process_file:close()
 
 -- set the package path to collect source code
 package.path = '/Users/samduplessis/APLACE/getting-buckets/game/src/?.lua;' .. package.path
-
-local file_manager = require'menu/file_manager'(working_directory .. '/user_code', datamodel)
 
 local main_font = love.graphics.newFont(24)
 local draw = require'menu/draw_various_drawables'(love.graphics, {main_font = main_font})
@@ -30,13 +30,15 @@ local datamodel = require'datamodel/volatile'(
   }
 )
 
+local file_manager = require'menu/file_manager'(working_directory .. '/user_code', datamodel)
+
 local Time = require'utils/time'
 local timer_dispensary = Time.timer_dispensary()
 
 local menu_engine = require'menu/engine'({
     display_file_location = require'menu/presenters/display_file_location'(
         function(...) love.event.push(...) end,
-        datamodel),
+        datamodel,
         file_manager),
     level_selection = require'menu/presenters/level_selection'(function(...) love.event.push(...) end, datamodel),
     game = require'menu/presenters/game'(function(...) love.event.push(...) end, datamodel, timer_dispensary),

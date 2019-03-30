@@ -22,11 +22,14 @@ describe('file manager', function()
     end)
 
     it('should be able to create a file', function()
+        local location
         io.open.should_be_called_with('directory/file', 'w').and_will_return(file_mock)
         .and_also(file_mock.close.should_be_called())
         .when(
-            function() file_manager.open('file') end
+            function() location = file_manager.open('file') end
         )
+
+        assert.are.same(location, 'directory/file')
     end)
 
     it('should be able to read from a file', function()
@@ -39,11 +42,5 @@ describe('file manager', function()
         )
 
         assert.are.same(contents, 'happily ever after')
-    end)
-
-    it('should offer file location', function()
-        local location = file_manager.location('file')
-
-        assert.are.same(location, 'directory/file')
     end)
 end)
