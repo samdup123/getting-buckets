@@ -21,8 +21,8 @@ local datamodel = require'datamodel/volatile'(
         width = love.graphics.getWidth(),
         height = love.graphics.getHeight(),
       }},
-     'current user code',
      'current level environment',
+     'current user code',
      'current level number',
      'current game history',
      'player won last game',
@@ -79,11 +79,9 @@ function love.load(arg)
   love.handlers.menu_event = love.menu_event
   love.handlers.game_play_event = love.game_play_event
 
-  datamodel.write('current user code', current_user_code)
   local random_level_environment = require'levels/random/environment'
   local user_function = load(current_user_code)()
-  local env = random_level_environment(user_function)
-  datamodel.write('current level environment', env)
+  datamodel.write('current level environment', random_level_environment)
 end
 
 
