@@ -224,6 +224,13 @@ return function(release_event, datamodel, timer_dispensary)
         release_event('menu_event', 'job_complete')
     end
 
+    local click_release_callback
+    local click_release_callback_generator = function(rect)
+        local old_val = rect.red
+        rect.red = 0
+        click_release_callback = function() rect.red = old_val end
+    end
+
     return {
       get_current_screen = function()
           return {drawables = {
@@ -257,10 +264,27 @@ return function(release_event, datamodel, timer_dispensary)
           }}
       end,
       click_occurred = function(click)
-          if check_click(compile_button, click) then
-              release_event('game_play_event')
-          elseif check_click(play_button, click) then
-              current_timer_token = timer_dispensary.repeating(time_between_frames, update_game_frame, timer_dispensary)
+          if click.type == 'press' then
+              if check_click(compile_button, click) then
+                  click_release_callback_generator(compile_button)
+                  release_event('game_play_event')
+              elseif check_click(play_button, click) then
+                  click_release_callback_generator(play_button)
+                  current_timer_token = timer_dispensary.repeating(time_between_frames, update_game_frame, timer_dispensary)
+              elseif check_click(play_back_button, click) then
+                  click_release_callback_generator(play_back_button)
+              elseif check_click(step_button, click) then
+                  click_release_callback_generator(step_button)
+              elseif check_click(step_back_button, click) then
+                  click_release_callback_generator(step_back_button)
+              elseif check_click(pause_button, click) then
+                  click_release_callback_generator(pause_button)
+              end
+          else
+              if click_release_callback then
+                  click_release_callback()
+                  click_release_callback = nil
+              end
           end
       end
       }

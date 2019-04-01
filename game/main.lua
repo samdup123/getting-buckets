@@ -102,7 +102,11 @@ function love.draw()
 end
 
 function love.mousepressed(x,y)
-    menu_engine.pass_click_event({x = x, y = y})
+    menu_engine.pass_click_event({x = x, y = y, type = 'press'})
+end
+
+function love.mousereleased(x,y)
+    menu_engine.pass_click_event({x = x, y = y, type = 'release'})
 end
 
 function love.menu_event(event)
