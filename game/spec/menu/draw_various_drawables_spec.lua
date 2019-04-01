@@ -48,8 +48,8 @@ describe('draw various drawables', function()
 
         graphics_mock.setColor.should_be_called_with(3, 4, 5, 6)
         .and_also(graphics_mock.setFont.should_be_called_with(font_mock))
-        .and_also(font_mock.getWrap.should_be_called_with('floop', 'limit').and_will_return('width', 'text'))
-        .and_also(graphics_mock.print.should_be_called_with('text', 45, 87))
+        .and_also(font_mock.getWrap.should_be_called_with('floop', 'limit').and_will_return('width', {'hello', 'world'}))
+        .and_also(graphics_mock.print.should_be_called_with('hello\nworld', 45, 87))
         .when(
             function() draw(text) end
         )
