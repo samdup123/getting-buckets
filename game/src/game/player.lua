@@ -1,4 +1,4 @@
-return function(ball_dropper, chutes, bucket, run_user_code)
+return function(ball_dropper, chutes, bucket, user_function_generator)
 
     local balls_in_play, balls_exiting, bucket_position
 
@@ -9,11 +9,11 @@ return function(ball_dropper, chutes, bucket, run_user_code)
         return chute_num == bucket_position
     end
 
-    local user_debug_string = ''
+    local user_output = ''
     local function debug_function(...)
         local args = {...}
         for _,arg in ipairs(args) do
-            user_debug_string = user_debug_string .. arg
+            user_output = user_output .. arg
         end
     end
 
@@ -37,30 +37,60 @@ return function(ball_dropper, chutes, bucket, run_user_code)
         end
     end
 
+    local function player_loses_game_because_of_code_error()
+        player_won_game = false
+    end
+
+    local user_function
     function tock()
+        local game_is_over
+
         local new_ball = ball_dropper.tock()
         balls_in_play, balls_exiting = chutes.tock(new_ball)
         local old_bucket_position = bucket_position
         bucket_position = bucket.tock(balls_in_play)
-        run_user_code(debug_function)
-        
-        if old_bucket_position == bucket_position then
-            remove_balls_that_were_caught(balls_exiting, bucket_position)
+
+        local success, error = pcall(user_function)
+        if not success then
+            player_loses_game_because_of_code_error()
+            print('code failure ', error)
+            debug_function(error)
+
+            game_is_over = true
+        else
+
+            if old_bucket_position == bucket_position then
+                remove_balls_that_were_caught(balls_exiting, bucket_position)
+            end
+            player_loses_game_if_any_balls_are_left(balls_exiting)
+
+            game_is_over = (#balls_in_play == 0 and ball_dropper.done())
         end
-        player_loses_game_if_any_balls_are_left(balls_exiting)
 
         table.insert(history, {
             balls_in_play = balls_in_play,
             bucket_position = bucket_position,
             lost_balls = balls_exiting,
-            debug = user_debug_string
+            debug = user_output
         })
-        user_debug_string = ''
+        user_output = ''
 
-        return (#balls_in_play == 0 and ball_dropper.done())
+        return game_is_over
     end
 
     local done_playing = false
+    local status, error = pcall(
+        function()
+            user_function = user_function_generator(bucket.controller(), debug_function)
+        end
+    )
+    if not status then
+        done_playing = true
+        history[1].debug = error
+    elseif user_function == nil then
+        done_playing = true
+        history[1].debug = 'User function returned no function. User code must be a function that returns a function'
+    end
 
     while not done_playing do
         done_playing = tock()

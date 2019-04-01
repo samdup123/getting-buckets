@@ -3,38 +3,18 @@ describe('game player', function()
     local BallDropper = require'game/ball_dropper'
     local Chutes = require'game/chutes'
     local Bucket = require'game/bucket'
-    local user_code = require'fakes/user_code'
+    local user_code_fake = require'fakes/user_code'
 
     it('should play a simple game', function()
 
-        local ball_drop_gantt = 
+        local ball_drop_gantt =
             {{1,3}, {}, {}, 2, 2, {}, {}, {1,2}}
         local ball_dropper = BallDropper(ball_drop_gantt)
         local number_of_chutes, length_of_chutes = 10, 2
         local chutes = Chutes(number_of_chutes, length_of_chutes)
         local bucket = Bucket(number_of_chutes, 1)
 
-        local user_code_gantt = 
-        {'r', 'l', '', 'r', 'r'}
-        local user_code_debug_gantt = 
-        {'hi', 'hey', 'hello', 'howdy', 'holla'}
-
-        local user_code_coroutine = coroutine.create(user_code)
-
-        local played_at_least_once = false
-        local function run_user_code(debug_function)
-            if not played_at_least_once then
-                status, err = coroutine.resume(user_code_coroutine, bucket.controller(), debug_function, user_code_gantt, user_code_debug_gantt)
-            else
-                status, err = coroutine.resume(user_code_coroutine)
-            end
-            if not status and err:sub(1,1) ~= 'c' then 
-                print('ERROR!!!\n\t' .. err)
-            end
-            played_at_least_once = true
-        end
-
-        history, board_info, player_won_game = GamePlayer(ball_dropper, chutes, bucket, run_user_code)
+        history, board_info, player_won_game = GamePlayer(ball_dropper, chutes, bucket, user_code_fake)
 
         assert.are.equal(number_of_chutes, board_info.number_of_chutes)
         assert.are.equal(length_of_chutes, board_info.length_of_chutes)
@@ -87,7 +67,7 @@ describe('game player', function()
 
         local expected_debug_outputs = {
             nil,
-            'hi', 
+            'hi',
             'hey',
             'hello',
             'howdy',
@@ -106,7 +86,7 @@ describe('game player', function()
                 -- io.write('lost ' .. ball .. ' ')
             end
             assert.are.same(expected_lost_balls[i] or {}, moment.lost_balls)
-            
+
             -- io.write('debug ' .. (moment.debug or ''))
             assert.are.same(expected_debug_outputs[i] or '', moment.debug or '')
 

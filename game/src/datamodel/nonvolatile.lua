@@ -33,7 +33,7 @@ return function(config)
     end
 
     local callbacks = {}
-    
+
     return {
         read = function(label)
             if not label_map[label] then error('label "' .. label .. '" is not specified') end

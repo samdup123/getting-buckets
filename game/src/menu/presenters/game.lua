@@ -24,6 +24,12 @@ local console_rect = {
     blue = 255
 }
 
+local console_text = {
+    font = 'main_font',
+    x = console_rect.x + 5,
+    y = console_rect.y + 5,
+}
+
 local button = function(x,y)
     return {
         mode = 'fill',
@@ -166,7 +172,7 @@ local balls = {}
 local history
 local time_between_frames = .15
 local current_timer_token
-local current_fame = 0
+local current_frame = 0
 
 local datamodel_on_change_callback = function(label, data)
     if label == 'current level environment' then
@@ -182,16 +188,17 @@ local datamodel_on_change_callback = function(label, data)
         bucket_rect.y = chutes_rect.y + chutes_rect.height
 
         ball_drop_ammount = chutes_rect.height / length_of_chutes
+        console_text.limit = console_rect.width - 10
     elseif label == 'current game history' then
         history = data
     end
 end
 
-local function update_game_frame()
-    if history then
-        current_fame = current_fame + 1
+local function update_game_frame(timer_dispensary)
+    if history and current_frame < #history then
+        current_frame = current_frame + 1
         balls = {}
-        for _,ball in ipairs(history[current_fame].balls_in_play) do
+        for _,ball in ipairs(history[current_frame].balls_in_play) do
             table.insert(balls,
                 {
                     mode = 'fill',
@@ -202,7 +209,11 @@ local function update_game_frame()
                 }
             )
         end
-        bucket_rect.x = (history[current_fame].bucket_position - 1) * bucket_rect.width + chutes_rect.x
+        bucket_rect.x = (history[current_frame].bucket_position - 1) * bucket_rect.width + chutes_rect.x
+
+        console_text.string = history[current_frame].debug
+    else
+        timer_dispensary.stop(current_timer_token)
     end
 end
 
@@ -218,6 +229,7 @@ return function(release_event, datamodel, timer_dispensary)
           return {drawables = {
               game_rect,
               console_rect,
+              console_text,
               play_back_button,
               step_back_button,
               pause_button,
@@ -248,7 +260,7 @@ return function(release_event, datamodel, timer_dispensary)
           if check_click(compile_button, click) then
               release_event('game_play_event')
           elseif check_click(play_button, click) then
-              current_timer_token = timer_dispensary.repeating(time_between_frames, update_game_frame)
+              current_timer_token = timer_dispensary.repeating(time_between_frames, update_game_frame, timer_dispensary)
           end
       end
       }

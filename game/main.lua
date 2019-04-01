@@ -1,5 +1,13 @@
 love.window.setFullscreen(true)
 
+local os_process_file = assert(io.popen('pwd', 'r'))
+local working_directory = os_process_file:read('*all')
+working_directory = working_directory:sub(1, #working_directory - 1)
+os_process_file:close()
+
+os_process_file = assert(io.popen('mkdir user_code'))
+os_process_file:close()
+
 -- set the package path to collect source code
 package.path = '/Users/samduplessis/APLACE/getting-buckets/game/src/?.lua;' .. package.path
 
@@ -7,24 +15,32 @@ local main_font = love.graphics.newFont(24)
 local draw = require'menu/draw_various_drawables'(love.graphics, {main_font = main_font})
 local datamodel = require'datamodel/volatile'(
   {
-    'current file location',
     {'current window size',
       {
         width = love.graphics.getWidth(),
         height = love.graphics.getHeight(),
       }},
-     'current user code',
      'current level environment',
+     'current user code',
+     'current level number',
      'current game history',
-     'player won last game'
+     'player won last game',
+     'current file location',
+     {'file separator', '/'},
+     {'lua version', tonumber(_VERSION:sub(#_VERSION - 2, #_VERSION))}
   }
 )
+
+local file_manager = require'menu/file_manager'(working_directory .. '/user_code', datamodel)
 
 local Time = require'utils/time'
 local timer_dispensary = Time.timer_dispensary()
 
 local menu_engine = require'menu/engine'({
-    display_file_location = require'menu/presenters/display_file_location'(function(...) love.event.push(...) end, datamodel),
+    display_file_location = require'menu/presenters/display_file_location'(
+        function(...) love.event.push(...) end,
+        datamodel,
+        file_manager),
     level_selection = require'menu/presenters/level_selection'(function(...) love.event.push(...) end, datamodel),
     game = require'menu/presenters/game'(function(...) love.event.push(...) end, datamodel, timer_dispensary),
     null = require'menu/presenters/null'
@@ -59,16 +75,12 @@ local current_user_code =
     end]]
 
 function love.load(arg)
-  datamodel.write('current file location', '/sam/homie-zone/level1_code.lua')
-
   love.handlers.menu_event = love.menu_event
   love.handlers.game_play_event = love.game_play_event
 
-  datamodel.write('current user code', current_user_code)
   local random_level_environment = require'levels/random/environment'
   local user_function = load(current_user_code)()
-  local env = random_level_environment(user_function)
-  datamodel.write('current level environment', env)
+  datamodel.write('current level environment', random_level_environment)
 end
 
 
@@ -98,5 +110,8 @@ function love.menu_event(event)
 end
 
 function love.game_play_event(event)
+    local location = datamodel.read('current file location')
+    current_user_code = file_manager.read(location)
+    datamodel.write('current user code', current_user_code)
     game_engine.game_play_requested()
 end

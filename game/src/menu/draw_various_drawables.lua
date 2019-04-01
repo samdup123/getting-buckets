@@ -6,14 +6,23 @@ return function(graphics, fonts)
         if drawable.string then
             font = fonts[drawable.font]
             graphics.setFont(font)
-            graphics.print(
-                drawable.string, 
-                drawable.x, 
-                drawable.y, 
-                nil, nil, nil, 
-                font:getWidth(drawable.string)/2, 
-                font:getHeight()/2)
 
+            if drawable.limit then
+                local _, strings = font:getWrap(drawable.string, drawable.limit)
+                local _string = table.concat(strings, '\n')
+                graphics.print(
+                    _string,
+                    drawable.x,
+                    drawable.y)
+            else
+                graphics.print(
+                    drawable.string,
+                    drawable.x,
+                    drawable.y,
+                    nil, nil, nil,
+                    font:getWidth(drawable.string)/2,
+                    font:getHeight()/2)
+            end
         elseif drawable.r then
             graphics.circle(drawable.mode, drawable.x, drawable.y, drawable.r)
         elseif drawable.width then

@@ -13,15 +13,9 @@ local chutes = Chutes(number_of_chutes, length_of_chutes)
 local random_func = function() return math.random(number_of_chutes) end
 local ball_dropper = Ball_Dropper(random_func, number_of_chutes, number_of_balls_that_will_fall, tocks_between_drops)
 local bucket = Bucket(number_of_chutes, starting_chute)
-local controller = bucket.controller()
 
-local null_debug = function() end
-
-return function(player_function)
     return {
         ball_dropper = ball_dropper,
         chutes = chutes,
-        bucket = bucket,
-        user_function = player_function(controller, null_debug)
+        bucket = bucket
     }
-end
