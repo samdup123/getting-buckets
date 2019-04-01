@@ -41,7 +41,7 @@ return function(ball_dropper, chutes, bucket, user_function_generator)
         player_won_game = false
     end
 
-    local run_user_code
+    local user_function
     function tock()
         local game_is_over
 
@@ -50,7 +50,7 @@ return function(ball_dropper, chutes, bucket, user_function_generator)
         local old_bucket_position = bucket_position
         bucket_position = bucket.tock(balls_in_play)
 
-        local success, error, blah = pcall(run_user_code)
+        local success, error = pcall(user_function)
         if not success then
             player_loses_game_because_of_code_error()
             print('code failure ', error)
@@ -79,16 +79,18 @@ return function(ball_dropper, chutes, bucket, user_function_generator)
     end
 
     local done_playing = false
-    local user_function
-    local status, error = pcall(function() user_function = user_function_generator(bucket.controller(), debug_function) end)
+    local status, error = pcall(
+        function()
+            user_function = user_function_generator(bucket.controller(), debug_function)
+        end
+    )
+    print('just passed in the controller and the debug', user_function)
     if not status then
         done_playing = true
-        debug_function(error)
-        print('error occurred in the first run of the user function in game/player', error)
-
         history[1].debug = error
-    else
-        run_user_code = function() user_function() end
+    elseif user_function == nil then
+        done_playing = true
+        history[1].debug = 'User function returned no function. User code must be a function that returns a function'
     end
 
     while not done_playing do

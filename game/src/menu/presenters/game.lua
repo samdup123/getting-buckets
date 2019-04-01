@@ -250,7 +250,7 @@ return function(release_event, datamodel, timer_dispensary)
           if check_click(compile_button, click) then
               release_event('game_play_event')
           elseif check_click(play_button, click) then
-              current_timer_token = timer_dispensary.repeating(time_between_frames, update_game_frame)
+              current_timer_token = timer_dispensary.repeating(time_between_frames, update_game_frame, timer_dispensary)
           end
       end
       }

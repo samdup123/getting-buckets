@@ -6,7 +6,6 @@ return function(controller, debug)
 
     local i = 1
 
-
     return function()
         local function move(direction)
             local dir

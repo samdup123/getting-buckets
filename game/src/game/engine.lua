@@ -16,7 +16,7 @@ return function(player, datamodel)
                 env.ball_dropper,
                 env.chutes,
                 env.bucket,
-                user_function
+                user_function or (function() end)
             )
             datamodel.write('current game history', history)
             datamodel.write('player won last game', player_won_game)
