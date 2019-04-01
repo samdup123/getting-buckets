@@ -24,6 +24,12 @@ local console_rect = {
     blue = 255
 }
 
+local console_text = {
+    font = 'main_font',
+    x = console_rect.x + 5,
+    y = console_rect.y + 5,
+}
+
 local button = function(x,y)
     return {
         mode = 'fill',
@@ -182,6 +188,7 @@ local datamodel_on_change_callback = function(label, data)
         bucket_rect.y = chutes_rect.y + chutes_rect.height
 
         ball_drop_ammount = chutes_rect.height / length_of_chutes
+        console_text.limit = console_rect.width - 10
     elseif label == 'current game history' then
         history = data
     end
@@ -203,6 +210,8 @@ local function update_game_frame(timer_dispensary)
             )
         end
         bucket_rect.x = (history[current_frame].bucket_position - 1) * bucket_rect.width + chutes_rect.x
+
+        console_text.string = history[current_frame].debug
     else
         timer_dispensary.stop(current_timer_token)
     end
@@ -220,6 +229,7 @@ return function(release_event, datamodel, timer_dispensary)
           return {drawables = {
               game_rect,
               console_rect,
+              console_text,
               play_back_button,
               step_back_button,
               pause_button,

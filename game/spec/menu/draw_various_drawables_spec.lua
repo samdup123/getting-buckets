@@ -1,6 +1,6 @@
 describe('draw various drawables', function()
     local mach = require'mach'
-    
+
     local graphics = {
         rectangle = function() end,
         print = function() end,
@@ -13,12 +13,13 @@ describe('draw various drawables', function()
     local font = {}
     function font.getWidth() end
     function font.getHeight() end
+    function font.getWrap() end
     local font_mock = mach.mock_object(font, 'font')
     local fonts = {['flip'] = font_mock}
     local graphics_mock = mach.mock_table(graphics, 'graphics')
 
     local draw = require'menu/draw_various_drawables'(graphics_mock, fonts)
-    
+
     it('should correctly draw a rectangle', function()
         local rect = {mode = 'fill', x = 30, y = 40, width = 100, height = 120, red = 2, green = 3, blue = 4, alpha = 5}
 
@@ -37,6 +38,18 @@ describe('draw various drawables', function()
         .and_also(font_mock.getWidth.should_be_called_with('floop').and_will_return(64))
         .and_also(font_mock.getHeight.should_be_called().and_will_return(66))
         .and_also(graphics_mock.print.should_be_called_with('floop', 45, 87, nil, nil, nil, 64/2, 66/2))
+        .when(
+            function() draw(text) end
+        )
+    end)
+
+    it('should correctly draw text with wrap mode', function()
+        local text = {string = 'floop', font = 'flip', limit = 'limit', x = 45, y = 87, red = 3, green = 4, blue = 5, alpha = 6}
+
+        graphics_mock.setColor.should_be_called_with(3, 4, 5, 6)
+        .and_also(graphics_mock.setFont.should_be_called_with(font_mock))
+        .and_also(font_mock.getWrap.should_be_called_with('floop', 'limit').and_will_return('width', 'text'))
+        .and_also(graphics_mock.print.should_be_called_with('text', 45, 87))
         .when(
             function() draw(text) end
         )

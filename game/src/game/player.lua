@@ -84,7 +84,6 @@ return function(ball_dropper, chutes, bucket, user_function_generator)
             user_function = user_function_generator(bucket.controller(), debug_function)
         end
     )
-    print('just passed in the controller and the debug', user_function)
     if not status then
         done_playing = true
         history[1].debug = error

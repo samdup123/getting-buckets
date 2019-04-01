@@ -1,6 +1,5 @@
 love.window.setFullscreen(true)
 
-
 local os_process_file = assert(io.popen('pwd', 'r'))
 local working_directory = os_process_file:read('*all')
 working_directory = working_directory:sub(1, #working_directory - 1)
