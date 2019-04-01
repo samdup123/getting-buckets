@@ -5,8 +5,8 @@ local current_time = 0
 local token_generation = 1
 
 local timers = {}
-local function add_timer(time, callback, token)
-    local new_timer = {time = time, callback = callback, token = token}
+local function add_timer(time, callback, context, token)
+    local new_timer = {time = time, callback = callback, context = context, token = token}
     -- TODO: make this sorting better!
     if #timers == 0 then
         table.insert(timers, new_timer)
@@ -25,12 +25,12 @@ local function add_timer(time, callback, token)
     end
 end
 
-local function create_timer(period, callback, token)
+local function create_timer(period, callback, context, token)
     if not token then
         token = token_generation
         token_generation = token_generation + 1
     end
-    add_timer(current_time + period, callback, token)
+    add_timer(current_time + period, callback, context, token)
     return token
 end
 
@@ -52,7 +52,7 @@ if not initialized then
             local index = 1
             while true do
                 if timers[index] and (timers[index].time <= current_time) then
-                    timers[index].callback()
+                    timers[index].callback(timers[index].context)
                     index = index + 1
                 else
                     break
@@ -70,14 +70,14 @@ if not initialized then
 
         timer_dispensary = function()
             return {
-                one_time = function(period, callback) return create_timer(period, callback) end,
-                repeating = function(period, callback)
+                one_time = function(period, callback, context) return create_timer(period, callback, context) end,
+                repeating = function(period, callback, context)
                     local new_callback, token
-                    new_callback = function()
-                        callback()
-                        create_timer(period, new_callback, token)
+                    new_callback = function(...)
+                        callback(...)
+                        create_timer(period, new_callback, context, token)
                     end
-                    token = create_timer(period, new_callback)
+                    token = create_timer(period, new_callback, context)
                     return token
                 end,
                 stop = remove_timer

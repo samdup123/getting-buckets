@@ -7,12 +7,7 @@ return function(player, datamodel)
             local user_function
             if not error then
                 print('no error after first load in game/engine.lua')
-                user_function, error = f()
-                if error then
-                    print('error after second', error)
-                else
-                    print('no error after second')
-                end
+                user_function = f()
             else
                 print('error after first load in game/engine.lua', error)
             end

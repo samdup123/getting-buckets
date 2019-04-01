@@ -166,7 +166,7 @@ local balls = {}
 local history
 local time_between_frames = .15
 local current_timer_token
-local current_fame = 0
+local current_frame = 0
 
 local datamodel_on_change_callback = function(label, data)
     if label == 'current level environment' then
@@ -187,11 +187,11 @@ local datamodel_on_change_callback = function(label, data)
     end
 end
 
-local function update_game_frame()
-    if history then
-        current_fame = current_fame + 1
+local function update_game_frame(timer_dispensary)
+    if history and current_frame < #history then
+        current_frame = current_frame + 1
         balls = {}
-        for _,ball in ipairs(history[current_fame].balls_in_play) do
+        for _,ball in ipairs(history[current_frame].balls_in_play) do
             table.insert(balls,
                 {
                     mode = 'fill',
@@ -202,7 +202,9 @@ local function update_game_frame()
                 }
             )
         end
-        bucket_rect.x = (history[current_fame].bucket_position - 1) * bucket_rect.width + chutes_rect.x
+        bucket_rect.x = (history[current_frame].bucket_position - 1) * bucket_rect.width + chutes_rect.x
+    else
+        timer_dispensary.stop(current_timer_token)
     end
 end
 

@@ -84,6 +84,9 @@ return function(ball_dropper, chutes, bucket, user_function_generator)
     if not status then
         done_playing = true
         debug_function(error)
+        print('error occurred in the first run of the user function in game/player', error)
+
+        history[1].debug = error
     else
         run_user_code = function() user_function() end
     end
