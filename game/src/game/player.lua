@@ -50,7 +50,7 @@ return function(ball_dropper, chutes, bucket, user_function_generator)
         local old_bucket_position = bucket_position
         bucket_position = bucket.tock(balls_in_play)
 
-        local success, error = pcall(user_function)
+        local success, error = xpcall(user_function, debug.traceback)
         if not success then
             player_loses_game_because_of_code_error()
             print('code failure ', error)

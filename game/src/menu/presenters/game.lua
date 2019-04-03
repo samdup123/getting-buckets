@@ -16,7 +16,7 @@ local console_rect = {
     mode = 'fill',
     x = game_rect.x + game_rect.width + 10,
     y = game_rect.y,
-    width = 450,
+    width = 550,
     height = game_rect.height,
 
     red = 255,
