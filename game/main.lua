@@ -9,6 +9,7 @@ os_process_file = assert(io.popen('mkdir user_code'))
 os_process_file:close()
 
 -- set the package path to collect source code
+package.path = '/Users/samduplessis/APLACE/getting-buckets/?.lua;' .. package.path
 package.path = '/Users/samduplessis/APLACE/getting-buckets/game/src/?.lua;' .. package.path
 
 local main_font = love.graphics.newFont(24)
@@ -115,7 +116,7 @@ end
 
 function love.game_play_event(event)
     local location = datamodel.read('current file location')
-    current_user_code = file_manager.read(location)
+    current_user_code = require('user_code/' .. location)
     datamodel.write('current user code', current_user_code)
     game_engine.game_play_requested()
 end

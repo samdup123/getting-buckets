@@ -23,18 +23,18 @@ describe('file manager', function()
 
     it('should be able to create a file', function()
         local location
-        io.open.should_be_called_with('directory/file', 'a+').and_will_return(file_mock)
+        io.open.should_be_called_with('directory/file.lua', 'a+').and_will_return(file_mock)
         .and_also(file_mock.close.should_be_called())
         .when(
             function() location = file_manager.open('file') end
         )
 
-        assert.are.same(location, 'directory/file')
+        assert.are.same(location, 'directory/file.lua')
     end)
 
     it('should be able to read from a file in lua 5.3', function()
         local contents
-        io.open.should_be_called_with('directory/file', 'r').and_will_return(file_mock)
+        io.open.should_be_called_with('directory/file.lua', 'r').and_will_return(file_mock)
         .and_also(datamodel.read.should_be_called_with('lua version').and_will_return(5.3))
         .and_also(file_mock.read.should_be_called_with('a').and_will_return('happily ever after'))
         .and_also(file_mock.close.should_be_called())
@@ -47,7 +47,7 @@ describe('file manager', function()
 
     it('should be able to read from a file in lua 5.1', function()
         local contents
-        io.open.should_be_called_with('directory/file', 'r').and_will_return(file_mock)
+        io.open.should_be_called_with('directory/file.lua', 'r').and_will_return(file_mock)
         .and_also(datamodel.read.should_be_called_with('lua version').and_will_return(5.1))
         .and_also(file_mock.read.should_be_called_with('*a').and_will_return('happily ever after'))
         .and_also(file_mock.close.should_be_called())
