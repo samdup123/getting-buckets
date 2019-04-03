@@ -281,10 +281,8 @@ return function(release_event, datamodel, timer_dispensary)
                   click_release_callback_generator(pause_button)
               end
           else
-              if click_release_callback then
-                  click_release_callback()
-                  click_release_callback = nil
-              end
+              (click_release_callback or function() end)()
+              click_release_callback = nil
           end
       end
       }
