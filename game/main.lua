@@ -13,7 +13,8 @@ package.path = '/Users/samduplessis/APLACE/getting-buckets/?.lua;' .. package.pa
 package.path = '/Users/samduplessis/APLACE/getting-buckets/game/src/?.lua;' .. package.path
 
 local main_font = love.graphics.newFont(24)
-local draw = require'menu/draw_various_drawables'(love.graphics, {main_font = main_font})
+local console_font = love.graphics.newFont(14)
+local draw = require'menu/draw_various_drawables'(love.graphics, {main_font = main_font, console_font = console_font})
 local datamodel = require'datamodel/volatile'(
   {
     {'current window size',

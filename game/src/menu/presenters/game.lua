@@ -25,7 +25,7 @@ local console_rect = {
 }
 
 local console_text = {
-    font = 'main_font',
+    font = 'console_font',
     x = console_rect.x + 5,
     y = console_rect.y + 5,
 }
