@@ -166,6 +166,10 @@ describe('time', function()
         nothing_should_happen_when(function() after(100) end)
     end)
 
+    it('should allow a nil timer to be stopped (to no effect)', function()
+        nothing_should_happen_when(function() timer.stop(nil) end)
+    end)
+
     it('should allow timers to be created with contexts', function()
         timer.one_time(8, f, 'context')
         timer.repeating(9, g, 'CONTEXT')

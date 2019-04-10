@@ -173,6 +173,7 @@ local history
 local time_between_frames = .15
 local current_timer_token
 local current_frame = 0
+local direction_of_movement = 1
 
 local datamodel_on_change_callback = function(label, data)
     if label == 'current level environment' then
@@ -196,7 +197,7 @@ end
 
 local function update_game_frame(timer_dispensary)
     if history and current_frame < #history then
-        current_frame = current_frame + 1
+        current_frame = current_frame + (direction_of_movement * 1)
         balls = {}
         for _,ball in ipairs(history[current_frame].balls_in_play) do
             table.insert(balls,
@@ -270,14 +271,25 @@ return function(release_event, datamodel, timer_dispensary)
                   release_event('game_play_event')
               elseif check_click(play_button, click) then
                   click_release_callback_generator(play_button)
+                  timer_dispensary.stop(current_timer_token)
                   current_timer_token = timer_dispensary.repeating(time_between_frames, update_game_frame, timer_dispensary)
               elseif check_click(play_back_button, click) then
+                  timer_dispensary.stop(current_timer_token)
+                  direction_of_movement = -1
+                  current_timer_token = timer_dispensary.repeating(time_between_frames, update_game_frame, timer_dispensary)
                   click_release_callback_generator(play_back_button)
               elseif check_click(step_button, click) then
+                  timer_dispensary.stop(current_timer_token)
+                  direction_of_movement = 1
+                  update_game_frame(timer_dispensary)
                   click_release_callback_generator(step_button)
               elseif check_click(step_back_button, click) then
+                  timer_dispensary.stop(current_timer_token)
+                  direction_of_movement = -1
+                  update_game_frame(timer_dispensary)
                   click_release_callback_generator(step_back_button)
               elseif check_click(pause_button, click) then
+                  timer_dispensary.stop(current_timer_token)
                   click_release_callback_generator(pause_button)
               end
           else
