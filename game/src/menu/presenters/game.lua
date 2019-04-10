@@ -171,29 +171,13 @@ local ball_drop_ammount
 local balls = {}
 local history
 local time_between_frames = .15
+local time_between_frames_minimum = .01
+local time_between_frames_maximum = 1.2
+local time_between_frames_range = time_between_frames_maximum - time_between_frames_minimum
 local current_timer_token
 local current_frame = 0
 local direction_of_movement = 1
-
-local datamodel_on_change_callback = function(label, data)
-    if label == 'current level environment' then
-        number_of_chutes = data.chutes.info().number_of_chutes
-        local length_of_chutes = data.chutes.info().length_of_chutes
-
-        local width_of_balls = chutes_rect.width / number_of_chutes
-
-        bucket_rect.width = width_of_balls
-        bucket_rect.height = width_of_balls
-
-        chutes_rect.height = game_rect.y + game_rect.height - 40 - width_of_balls
-        bucket_rect.y = chutes_rect.y + chutes_rect.height
-
-        ball_drop_ammount = chutes_rect.height / length_of_chutes
-        console_text.limit = console_rect.width - 10
-    elseif label == 'current game history' then
-        history = data
-    end
-end
+local should_update_time_between_frames_on_mouse_move = false
 
 local function update_game_frame(timer_dispensary)
     if history and current_frame < #history then
@@ -225,6 +209,43 @@ local function update_game_frame(timer_dispensary)
 end
 
 return function(release_event, datamodel, timer_dispensary)
+
+    local datamodel_on_change_callback = function(label, data)
+        if label == 'current level environment' then
+            number_of_chutes = data.chutes.info().number_of_chutes
+            local length_of_chutes = data.chutes.info().length_of_chutes
+
+            local width_of_balls = chutes_rect.width / number_of_chutes
+
+            bucket_rect.width = width_of_balls
+            bucket_rect.height = width_of_balls
+
+            chutes_rect.height = game_rect.y + game_rect.height - 40 - width_of_balls
+            bucket_rect.y = chutes_rect.y + chutes_rect.height
+
+            ball_drop_ammount = chutes_rect.height / length_of_chutes
+            console_text.limit = console_rect.width - 10
+        elseif label == 'current game history' then
+            history = data
+        elseif label == 'current mouse position' and should_update_time_between_frames_on_mouse_move then
+            local pos = data
+            if pos.x <= speed_bar.x then
+                speed_toggle.x = speed_bar.x
+                time_between_frames = time_between_frames_minimum
+            elseif pos.x >= speed_bar.x + speed_bar.width then
+                speed_toggle.x = speed_bar.x + speed_bar.width
+                time_between_frames = time_between_frames_maximum
+            else
+                speed_toggle.x = pos.x
+                local frac = (speed_toggle.x - speed_bar.x) / (speed_bar.width)
+                time_between_frames = time_between_frames_minimum + (time_between_frames_range * frac)
+            end
+
+            timer_dispensary.stop(current_timer_token)
+            current_timer_token = timer_dispensary.repeating(time_between_frames, update_game_frame, timer_dispensary)
+        end
+    end
+    
     datamodel.subscribe_to_on_change(datamodel_on_change_callback)
 
     local function done_with_screen()
@@ -300,10 +321,14 @@ return function(release_event, datamodel, timer_dispensary)
               elseif check_click(pause_button, click) then
                   timer_dispensary.stop(current_timer_token)
                   click_release_callback_generator(pause_button)
+              elseif check_click(speed_toggle, click) then
+                  should_update_time_between_frames_on_mouse_move = true
+                  click_release_callback_generator(speed_toggle)
               end
           else
               (click_release_callback or function() end)()
               click_release_callback = nil
+              should_update_time_between_frames_on_mouse_move = false
           end
       end
       }

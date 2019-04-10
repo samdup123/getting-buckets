@@ -29,7 +29,8 @@ local datamodel = require'datamodel/volatile'(
      'player won last game',
      'current file location',
      {'file separator', '/'},
-     {'lua version', tonumber(_VERSION:sub(#_VERSION - 2, #_VERSION))}
+     {'lua version', tonumber(_VERSION:sub(#_VERSION - 2, #_VERSION))},
+     'current mouse position',
   }
 )
 
@@ -52,36 +53,11 @@ local game_engine = require'game/engine'(require'game/player', datamodel)
 
 math.randomseed(os.time())
 
-local current_user_code =
-    [[return function(controller, debug)
-        local current_chute = controller.current_chute()
-        local last_chute = controller.number_of_chutes()
-        local direction_of_movement = 'left'
-
-        local function move()
-            controller['move_' .. direction_of_movement]()
-        end
-
-        return function()
-            if current_chute == 1 then
-                direction_of_movement = 'right'
-            elseif current_chute == last_chute then
-                direction_of_movement = 'left'
-            end
-
-            if not controller.ball_in_chute() then
-                move()
-            end
-            current_chute = controller.current_chute()
-        end
-    end]]
-
 function love.load(arg)
   love.handlers.menu_event = love.menu_event
   love.handlers.game_play_event = love.game_play_event
 
   local random_level_environment = require'levels/random/environment'
-  local user_function = load(current_user_code)()
   datamodel.write('current level environment', random_level_environment)
 end
 
@@ -109,6 +85,10 @@ end
 
 function love.mousereleased(x,y)
     menu_engine.pass_click_event({x = x, y = y, type = 'release'})
+end
+
+function love.mousemoved(x, y, dx, dy)
+    datamodel.write('current mouse position', {x = x, y = y})
 end
 
 function love.menu_event(event)
