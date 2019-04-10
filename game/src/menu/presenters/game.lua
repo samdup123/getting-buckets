@@ -198,6 +198,12 @@ end
 local function update_game_frame(timer_dispensary)
     if history and current_frame < #history then
         current_frame = current_frame + (direction_of_movement * 1)
+
+        if current_frame < 1 or current_frame > #history then
+            timer_dispensary.stop(current_timer_token)
+            return
+        end
+
         balls = {}
         for _,ball in ipairs(history[current_frame].balls_in_play) do
             table.insert(balls,
@@ -267,6 +273,9 @@ return function(release_event, datamodel, timer_dispensary)
       click_occurred = function(click)
           if click.type == 'press' then
               if check_click(compile_button, click) then
+                  current_frame = 1
+                  timer_dispensary.stop(current_timer_token)
+                  balls = {}
                   click_release_callback_generator(compile_button)
                   release_event('game_play_event')
               elseif check_click(play_button, click) then
