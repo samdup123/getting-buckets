@@ -31,13 +31,17 @@ local datamodel = require'datamodel/volatile'(
      {'file separator', '/'},
      {'lua version', tonumber(_VERSION:sub(#_VERSION - 2, #_VERSION))},
      'current mouse position',
+     'debounced current mouse position'
   }
 )
 
 local file_manager = require'menu/file_manager'(working_directory .. '/user_code', datamodel)
 
-local Time = require'utils/time'
+local Time = require'utils/time'()
 local timer_dispensary = Time.timer_dispensary()
+
+local Debouncer = require'utils/data_debouncer'
+Debouncer(datamodel, timer_dispensary, .1, 'current mouse position', 'debounced current mouse position')
 
 local menu_engine = require'menu/engine'({
     display_file_location = require'menu/presenters/display_file_location'(

@@ -15,6 +15,26 @@ describe('time', function()
 
     local function nothing_should_happen_when(f) f() end
 
+    describe('singleton', function()
+        it('should be able to update time', function()
+            assert.are.equal(0, Time.current())
+
+            Time.update(8)
+
+            assert.are.equal(8, Time.current())
+        end)
+
+        it('should be able to reset', function()
+            Time.update(100)
+
+            assert.are.equal(100, Time.current())
+
+            Time.reset()
+
+            assert.are.equal(0, Time.current())
+        end)
+    end)
+
     before_each(function()
         Time.reset()
         time = 0
