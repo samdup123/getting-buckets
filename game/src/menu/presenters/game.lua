@@ -182,7 +182,7 @@ local direction_of_movement = 1
 local should_update_time_between_frames_on_mouse_move = false
 
 local function update_game_frame(timer_dispensary)
-    if history and current_frame < #history then
+    if history and current_frame < #history and current_frame >= 0   then
         current_frame = current_frame + (direction_of_movement * 1)
 
         if current_frame < 1 or current_frame > #history then
