@@ -1,5 +1,5 @@
 describe('time', function()
-    local Time = require'utils/time'
+    local Time = require'utils/time'()
     local timer = Time.timer_dispensary()
     local mach = require'mach'
 
