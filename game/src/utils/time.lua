@@ -1,52 +1,48 @@
-local initialized = false
+return function()
+    local current_time = 0
 
-local current_time = 0
+    local token_generation = 1
 
-local token_generation = 1
+    local timers = {}
+    local function add_timer(time, callback, context, token)
+        local new_timer = {time = time, callback = callback, context = context, token = token}
+        -- TODO: make this sorting better!
+        if #timers == 0 then
+            table.insert(timers, new_timer)
+        else
+            local inserted = false
+            for index,timer in ipairs(timers) do
+                if time <= timer.time then
+                    inserted = true
+                    table.insert(timers, index, new_timer)
+                    break
+                end
+            end
+            if not inserted then
+                table.insert(timers, new_timer)
+            end
+        end
+    end
 
-local timers = {}
-local function add_timer(time, callback, context, token)
-    local new_timer = {time = time, callback = callback, context = context, token = token}
-    -- TODO: make this sorting better!
-    if #timers == 0 then
-        table.insert(timers, new_timer)
-    else
-        local inserted = false
+    local function create_timer(period, callback, context, token)
+        if not token then
+            token = token_generation
+            token_generation = token_generation + 1
+        end
+        add_timer(current_time + period, callback, context, token)
+        return token
+    end
+
+    local function remove_timer(token)
         for index,timer in ipairs(timers) do
-            if time <= timer.time then
-                inserted = true
-                table.insert(timers, index, new_timer)
+            if timer.token == token then
+                table.remove(timers, index)
                 break
             end
         end
-        if not inserted then
-            table.insert(timers, new_timer)
-        end
     end
-end
 
-local function create_timer(period, callback, context, token)
-    if not token then
-        token = token_generation
-        token_generation = token_generation + 1
-    end
-    add_timer(current_time + period, callback, context, token)
-    return token
-end
-
-local function remove_timer(token)
-    for index,timer in ipairs(timers) do
-        if timer.token == token then
-            table.remove(timers, index)
-            break
-        end
-    end
-end
-
-if not initialized then
-    initialized = true
     return {
-
         update = function(new_time)
             current_time = new_time
             local index = 1
@@ -62,6 +58,8 @@ if not initialized then
                 table.remove(timers, 1)
             end
         end,
+
+        current = function() return current_time end,
 
         reset = function()
             current_time = 0
