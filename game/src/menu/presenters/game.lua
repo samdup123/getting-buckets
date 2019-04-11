@@ -170,10 +170,12 @@ local number_of_chutes
 local ball_drop_ammount
 local balls = {}
 local history
-local time_between_frames = .15
-local time_between_frames_minimum = .01
-local time_between_frames_maximum = 1.2
+local time_between_frames_minimum = .006
+local time_between_frames_maximum = .15
 local time_between_frames_range = time_between_frames_maximum - time_between_frames_minimum
+local frac = (speed_toggle.x - speed_bar.x) / (speed_bar.width)
+local time_between_frames = time_between_frames_minimum + (time_between_frames_range * frac)
+frac = nil
 local current_timer_token
 local current_frame = 0
 local direction_of_movement = 1
@@ -243,9 +245,19 @@ return function(release_event, datamodel, timer_dispensary)
 
             timer_dispensary.stop(current_timer_token)
             current_timer_token = timer_dispensary.repeating(time_between_frames, update_game_frame, timer_dispensary)
+        elseif label == 'debounced current mouse position' and should_update_time_between_frames_on_mouse_move then
+            local pos = data
+            if pos.x <= speed_bar.x then
+                time_between_frames = time_between_frames_minimum
+            elseif pos.x >= speed_bar.x + speed_bar.width then
+                time_between_frames = time_between_frames_maximum
+            else
+                local frac = (speed_toggle.x - speed_bar.x) / (speed_bar.width)
+                time_between_frames = time_between_frames_minimum + (time_between_frames_range * frac)
+            end
         end
     end
-    
+
     datamodel.subscribe_to_on_change(datamodel_on_change_callback)
 
     local function done_with_screen()
