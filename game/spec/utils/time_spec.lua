@@ -1,6 +1,6 @@
 describe('time', function()
     local Time = require'utils/time'()
-    local timer = Time.timer_dispensary()
+    local timer_dispensary = Time.timer_dispensary()
     local mach = require'mach'
 
     local f = mach.mock_function('f')
@@ -41,7 +41,7 @@ describe('time', function()
     end)
 
     it('should allow a one time timer to be created', function()
-        timer.one_time(8, f)
+        timer_dispensary.one_time(8, f)
 
         nothing_should_happen_when(function() after(7) end)
 
@@ -50,8 +50,8 @@ describe('time', function()
     end)
 
     it('should allow multiple one time timers to be created (out of order)', function()
-        timer.one_time(8, f)
-        timer.one_time(5, g)
+        timer_dispensary.one_time(8, f)
+        timer_dispensary.one_time(5, g)
 
         nothing_should_happen_when(
             function() after(4) end
@@ -69,7 +69,7 @@ describe('time', function()
     end)
 
     it('should allow a repeating timer to be created', function()
-        timer.repeating(8, f)
+        timer_dispensary.repeating(8, f)
 
         nothing_should_happen_when(function() after(7) end)
 
@@ -88,8 +88,8 @@ describe('time', function()
     end)
 
     it('should allow one time timers to be executed at once', function()
-        timer.one_time(8, f)
-        timer.one_time(8, g)
+        timer_dispensary.one_time(8, f)
+        timer_dispensary.one_time(8, g)
 
         nothing_should_happen_when(function() after(7) end)
 
@@ -99,9 +99,9 @@ describe('time', function()
     end)
 
     it('should allow one time and repeating timers to be executed at once', function()
-        timer.one_time(16, f)
-        timer.repeating(8, g)
-        timer.repeating(8, h)
+        timer_dispensary.one_time(16, f)
+        timer_dispensary.repeating(8, g)
+        timer_dispensary.repeating(8, h)
 
         nothing_should_happen_when(function() after(7) end)
 
@@ -124,8 +124,8 @@ describe('time', function()
     end)
 
     it('should still have working one time timers when time happens irregularly', function()
-        timer.one_time(8, f)
-        timer.one_time(9, g)
+        timer_dispensary.one_time(8, f)
+        timer_dispensary.one_time(9, g)
 
         f.should_be_called()
         .and_also(g.should_be_called())
@@ -133,8 +133,8 @@ describe('time', function()
     end)
 
     it('should still have working repeating timers when time happens irregularly', function()
-        timer.repeating(8, f)
-        timer.repeating(9, g)
+        timer_dispensary.repeating(8, f)
+        timer_dispensary.repeating(9, g)
 
         f.should_be_called()
         .and_also(g.should_be_called())
@@ -148,32 +148,32 @@ describe('time', function()
     end)
 
     it('should allow one time timers to be stopped', function()
-        local token = timer.one_time(8, f)
-        timer.stop(token)
+        local timer = timer_dispensary.one_time(8, f)
+        timer.stop()
 
         nothing_should_happen_when(function() after(100) end)
     end)
 
     it('should allow timers that have already stopped to be stopped (to no effect)', function()
-        local token = timer.one_time(8, f)
+        local timer = timer_dispensary.one_time(8, f)
 
         f.should_be_called()
         .when(function() after(8) end)
 
-        timer.stop(token)
+        timer.stop()
 
         nothing_should_happen_when(function() after(100) end)
     end)
 
     it('should allow repeating timers to be stopped immediately', function()
-        local token = timer.repeating(8, f)
-        timer.stop(token)
+        local timer = timer_dispensary.repeating(8, f)
+        timer.stop()
 
         nothing_should_happen_when(function() after(100) end)
     end)
 
     it('should allow repeating timers to be stopped after some time', function()
-        local token = timer.repeating(8, f)
+        local timer = timer_dispensary.repeating(8, f)
 
         f.should_be_called()
         .when(function() after(8) end)
@@ -181,18 +181,14 @@ describe('time', function()
         f.should_be_called()
         .when(function() after(8) end)
 
-        timer.stop(token)
+        timer.stop()
 
         nothing_should_happen_when(function() after(100) end)
     end)
 
-    it('should allow a nil timer to be stopped (to no effect)', function()
-        nothing_should_happen_when(function() timer.stop(nil) end)
-    end)
-
     it('should allow timers to be created with contexts', function()
-        timer.one_time(8, f, 'context')
-        timer.repeating(9, g, 'CONTEXT')
+        timer_dispensary.one_time(8, f, 'context')
+        timer_dispensary.repeating(9, g, 'CONTEXT')
 
         nothing_should_happen_when(function() after(7) end)
 
@@ -201,5 +197,29 @@ describe('time', function()
 
         g.should_be_called_with('CONTEXT')
         .when(function() after(1) end)
+    end)
+
+    it('should allow one time timers to be restarted with new parameters', function()
+        local timer = timer_dispensary.one_time(8, f, 'context')
+
+        f.should_be_called_with('context')
+        .when(function() after(8) end)
+
+        timer.start(80, g, 'CONTEXT')
+
+        g.should_be_called_with('CONTEXT')
+        .when(function() after(80) end)
+    end)
+
+    it('should allow repeating timers to be restarted with new parameters', function()
+        local timer = timer_dispensary.repeating(8, f, 'context')
+
+        f.should_be_called_with('context')
+        .when(function() after(8) end)
+
+        timer.start(80, g, 'CONTEXT')
+
+        g.should_be_called_with('CONTEXT')
+        .when(function() after(80) end)
     end)
 end)

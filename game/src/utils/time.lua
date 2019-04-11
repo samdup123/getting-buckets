@@ -68,7 +68,21 @@ return function()
 
         timer_dispensary = function()
             return {
-                one_time = function(period, callback, context) return create_timer(period, callback, context) end,
+                one_time = function(period, callback, context)
+                    local token = create_timer(period, callback, context)
+
+                    return {
+                        stop = function() remove_timer(token) end,
+                        start = function(updated_period, updated_callback, updated_context)
+                            if updated_period then period = updated_period end
+                            if updated_callback then callback = updated_callback end
+                            if updated_context then context = updated_context end
+                            remove_timer(token)
+                            create_timer(period, callback, context, token)
+                        end
+                    }
+                end,
+
                 repeating = function(period, callback, context)
                     local new_callback, token
                     new_callback = function(...)
@@ -76,9 +90,18 @@ return function()
                         create_timer(period, new_callback, context, token)
                     end
                     token = create_timer(period, new_callback, context)
-                    return token
-                end,
-                stop = remove_timer
+
+                    return {
+                        stop = function() remove_timer(token) end,
+                        start = function(updated_period, updated_callback, updated_context)
+                            if updated_period then period = updated_period end
+                            if updated_callback then callback = updated_callback end
+                            if updated_context then context = updated_context end
+                            remove_timer(token)
+                            create_timer(period, new_callback, context, token)
+                        end
+                    }
+                end
             }
         end
     }
