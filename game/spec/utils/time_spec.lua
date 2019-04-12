@@ -222,4 +222,18 @@ describe('time', function()
         g.should_be_called_with('CONTEXT')
         .when(function() after(80) end)
     end)
+
+    it('should give timers that offer their information', function()
+        local timer1 = timer_dispensary.repeating(8, f, 'hotdog')
+        local timer2 = timer_dispensary.one_time(12, g, 'pizza')
+
+        assert.are.same({context = 'hotdog', period = 8, callback = f, type = 'repeating'}, timer1.info())
+        assert.are.same({context = 'pizza', period = 12, callback = g, type = 'one time'}, timer2.info())
+
+        timer1.start(9, g, 'cake')
+        timer2.start(13, f, 'popsicle')
+
+        assert.are.same({context = 'cake', period = 9, callback = g, type = 'repeating'}, timer1.info())
+        assert.are.same({context = 'popsicle', period = 13, callback = f, type = 'one time'}, timer2.info())
+    end)
 end)

@@ -68,6 +68,7 @@ return function()
 
         timer_dispensary = function()
             return {
+
                 one_time = function(period, callback, context)
                     local token = create_timer(period, callback, context)
 
@@ -79,7 +80,10 @@ return function()
                             if updated_context then context = updated_context end
                             remove_timer(token)
                             create_timer(period, callback, context, token)
-                        end
+                        end,
+                        info = function() return {
+                            period = period, callback = callback, context = context, type = 'one time'
+                        } end
                     }
                 end,
 
@@ -99,10 +103,13 @@ return function()
                             if updated_context then context = updated_context end
                             remove_timer(token)
                             create_timer(period, new_callback, context, token)
-                        end
+                        end,
+                        info = function() return {
+                            period = period, callback = callback, context = context, type = 'repeating'
+                        } end
                     }
                 end
             }
-        end
+        end -- end timer_dispensary
     }
 end
