@@ -176,7 +176,7 @@ local time_between_frames_range = time_between_frames_maximum - time_between_fra
 local frac = (speed_toggle.x - speed_bar.x) / (speed_bar.width)
 local time_between_frames = time_between_frames_minimum + (time_between_frames_range * frac)
 frac = nil
-local current_timer_token
+local game_play_timer
 local current_frame = 0
 local direction_of_movement = 1
 local should_update_time_between_frames_on_mouse_move = false
@@ -186,7 +186,7 @@ local function update_game_frame(timer_dispensary)
         current_frame = current_frame + (direction_of_movement * 1)
 
         if current_frame < 1 or current_frame > #history then
-            timer_dispensary.stop(current_timer_token)
+            game_play_timer.stop()
             return
         end
 
@@ -206,11 +206,15 @@ local function update_game_frame(timer_dispensary)
 
         console_text.string = history[current_frame].debug
     else
-        timer_dispensary.stop(current_timer_token)
+        game_play_timer.stop()
     end
 end
 
 return function(release_event, datamodel, timer_dispensary)
+
+    -- TODO: fix this, so you can create a timer object, without it starting
+    game_play_timer = timer_dispensary.repeating(time_between_frames, update_game_frame, timer_dispensary)
+    game_play_timer.stop()
 
     local datamodel_on_change_callback = function(label, data)
         if label == 'current level environment' then
@@ -243,8 +247,7 @@ return function(release_event, datamodel, timer_dispensary)
                 time_between_frames = time_between_frames_minimum + (time_between_frames_range * frac)
             end
 
-            timer_dispensary.stop(current_timer_token)
-            current_timer_token = timer_dispensary.repeating(time_between_frames, update_game_frame, timer_dispensary)
+            game_play_timer.start(time_between_frames)
         elseif label == 'debounced current mouse position' and should_update_time_between_frames_on_mouse_move then
             local pos = data
             if pos.x <= speed_bar.x then
@@ -307,31 +310,30 @@ return function(release_event, datamodel, timer_dispensary)
           if click.type == 'press' then
               if check_click(compile_button, click) then
                   current_frame = 1
-                  timer_dispensary.stop(current_timer_token)
+                  game_play_timer.stop()
                   balls = {}
                   click_release_callback_generator(compile_button)
                   release_event('game_play_event')
               elseif check_click(play_button, click) then
                   click_release_callback_generator(play_button)
-                  timer_dispensary.stop(current_timer_token)
-                  current_timer_token = timer_dispensary.repeating(time_between_frames, update_game_frame, timer_dispensary)
+                  direction_of_movement = 1
+                  game_play_timer.start(time_between_frames)
               elseif check_click(play_back_button, click) then
-                  timer_dispensary.stop(current_timer_token)
-                  direction_of_movement = -1
-                  current_timer_token = timer_dispensary.repeating(time_between_frames, update_game_frame, timer_dispensary)
                   click_release_callback_generator(play_back_button)
+                  direction_of_movement = -1
+                  game_play_timer.start(time_between_frames)
               elseif check_click(step_button, click) then
-                  timer_dispensary.stop(current_timer_token)
+                  game_play_timer.stop()
                   direction_of_movement = 1
                   update_game_frame(timer_dispensary)
                   click_release_callback_generator(step_button)
               elseif check_click(step_back_button, click) then
-                  timer_dispensary.stop(current_timer_token)
+                  game_play_timer.stop()
                   direction_of_movement = -1
                   update_game_frame(timer_dispensary)
                   click_release_callback_generator(step_back_button)
               elseif check_click(pause_button, click) then
-                  timer_dispensary.stop(current_timer_token)
+                  game_play_timer.stop()
                   click_release_callback_generator(pause_button)
               elseif check_click(speed_toggle, click) then
                   should_update_time_between_frames_on_mouse_move = true
