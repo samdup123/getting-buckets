@@ -1,7 +1,5 @@
 return {
   default = {
-    coverage = false,
+    coverage = true,
   }
 }
-
-

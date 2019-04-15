@@ -347,6 +347,6 @@ return function(release_event, datamodel, timer_dispensary)
               click_release_callback = nil
               should_update_time_between_frames_on_mouse_move = false
           end
-      end
+      end,
       }
 end
