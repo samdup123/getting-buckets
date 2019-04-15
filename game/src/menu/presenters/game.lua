@@ -182,35 +182,35 @@ local direction_of_movement = 1
 local should_update_time_between_frames_on_mouse_move = false
 
 local function update_game_frame(timer_dispensary)
-    if history and current_frame < #history then
-
-        if (current_frame == 1 and direction_of_movement == -1) or
-            (current_frame == #history and direction_of_movement == 1) then
-
-            game_play_timer.stop()
-            return
-        else
-            current_frame = current_frame + (direction_of_movement * 1)
-        end
-
-        balls = {}
-        for _,ball in ipairs(history[current_frame].balls_in_play) do
-            table.insert(balls,
-                {
-                    mode = 'fill',
-                    r = bucket_rect.width / 2,
-                    x = (ball.chute - .5) * bucket_rect.width + chutes_rect.x,
-                    y = (ball.location - .5) * ball_drop_ammount + chutes_rect.y,
-                    red = 255, green = 255, blue = 255
-                }
-            )
-        end
-        bucket_rect.x = (history[current_frame].bucket_position - 1) * bucket_rect.width + chutes_rect.x
-
-        console_text.string = history[current_frame].debug
-    else
+    if not history then
         game_play_timer.stop()
+        return
     end
+
+    if (current_frame == 1 and direction_of_movement == -1) or
+        (current_frame == #history and direction_of_movement == 1) then
+
+        game_play_timer.stop()
+        return
+    else
+        current_frame = current_frame + (direction_of_movement * 1)
+    end
+
+    balls = {}
+    for _,ball in ipairs(history[current_frame].balls_in_play) do
+        table.insert(balls,
+            {
+                mode = 'fill',
+                r = bucket_rect.width / 2,
+                x = (ball.chute - .5) * bucket_rect.width + chutes_rect.x,
+                y = (ball.location - .5) * ball_drop_ammount + chutes_rect.y,
+                red = 255, green = 255, blue = 255
+            }
+        )
+    end
+    bucket_rect.x = (history[current_frame].bucket_position - 1) * bucket_rect.width + chutes_rect.x
+
+    console_text.string = history[current_frame].debug
 end
 
 return function(release_event, datamodel, timer_dispensary)
