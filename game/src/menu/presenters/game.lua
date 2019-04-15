@@ -182,12 +182,15 @@ local direction_of_movement = 1
 local should_update_time_between_frames_on_mouse_move = false
 
 local function update_game_frame(timer_dispensary)
-    if history and current_frame < #history and current_frame >= 0   then
-        current_frame = current_frame + (direction_of_movement * 1)
+    if history and current_frame < #history then
 
-        if current_frame < 1 or current_frame > #history then
+        if (current_frame == 1 and direction_of_movement == -1) or
+            (current_frame == #history and direction_of_movement == 1) then
+
             game_play_timer.stop()
             return
+        else
+            current_frame = current_frame + (direction_of_movement * 1)
         end
 
         balls = {}
