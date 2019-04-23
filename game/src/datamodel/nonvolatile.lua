@@ -2,7 +2,6 @@ local zipper = require'zipper'
 local json = require'json'
 local io = require'io'
 
-
 return function(config)
 
     items = config.items or {}
