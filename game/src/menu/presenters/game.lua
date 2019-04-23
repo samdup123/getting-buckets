@@ -46,9 +46,9 @@ end
 
 local win_rectangle = {
     mode = 'fill',
-    x = console_rect.x + console_rect.width - 50,
+    x = console_rect.x + console_rect.width - 80,
     y = console_rect.y + console_rect.height,
-    width = 45,
+    width = 75,
     height = 45,
     red = 100,
     invisible = true
@@ -280,6 +280,11 @@ return function(release_event, datamodel, timer_dispensary)
             else
                 local frac = (speed_toggle.x - speed_bar.x) / (speed_bar.width)
                 time_between_frames = time_between_frames_minimum + (time_between_frames_range * frac)
+            end
+        elseif label == 'player won last game' then
+            if data == true then
+                win_rectangle.invisible = false
+                win_text.invisible = false
             end
         end
     end
