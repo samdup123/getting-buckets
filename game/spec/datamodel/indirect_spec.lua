@@ -46,15 +46,15 @@ describe('indirect datamodel', function()
         assert.is_false(datamodel.has('otherData'))
     end)
 
-    it('should have dummy subscribe to on change method', function()
+    it('should have dummy subscribe-to-on-change method', function()
         local datamodel = Datamodel({data = {read = read_func, write = write_func}})
 
         datamodel.subscribe_to_on_change(f)
         datamodel.subscribe_to_on_change(g)
 
-        write_func.should_be_called_with('data', 5)
+        write_func.should_be_called_with(5)
         .when(
-            function() datamodel.write('data', 5) end
+            function() datamodel.write('data',5) end
         )
     end)
 end)
