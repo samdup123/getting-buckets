@@ -44,6 +44,26 @@ local button = function(x,y)
     }
 end
 
+local win_rectangle = {
+    mode = 'fill',
+    x = console_rect.x + console_rect.width - 50,
+    y = console_rect.y + console_rect.height,
+    width = 45,
+    height = 45,
+    red = 100,
+    invisible = true
+}
+
+local win_text = {
+    font = 'console_font',
+    string = 'you won!',
+    x = win_rectangle.x + (win_rectangle.width / 2),
+    y = win_rectangle.y + (win_rectangle.height / 2),
+    invisible = true
+}
+
+print('win rect', win_rectangle.x, win_rectangle.y)
+
 local play_back_button = button(game_rect.x + 350, game_rect.y + game_rect.height + 30)
 local step_back_button = button(play_back_button.x + play_back_button.width + 30, play_back_button.y)
 local pause_button = button(step_back_button.x + step_back_button.width + 30, play_back_button.y)
@@ -306,6 +326,8 @@ return function(release_event, datamodel, timer_dispensary)
               speed_toggle,
               chutes_rect,
               bucket_rect,
+              win_rectangle,
+              win_text,
               unpack(balls)
           }}
       end,

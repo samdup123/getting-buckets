@@ -20,6 +20,8 @@ describe('draw various drawables', function()
 
     local draw = require'menu/draw_various_drawables'(graphics_mock, fonts)
 
+    local function nothing_should_happen_when(f) f() end
+
     it('should correctly draw a rectangle', function()
         local rect = {mode = 'fill', x = 30, y = 40, width = 100, height = 120, red = 2, green = 3, blue = 4, alpha = 5}
 
@@ -93,5 +95,23 @@ describe('draw various drawables', function()
         .when(
             function() draw(nil) end
         )
+    end)
+
+    it('should not draw drawables that are labeled as invisible', function()
+        local polygon = {
+            mode = 'fill',
+            x1 = 1,
+            y1 = 2,
+            x2 = 3,
+            y2 = 4,
+            x3 = 5,
+            y3 = 6,
+            red = 7,
+            green = 8,
+            blue = 9,
+            alpha = 10,
+            invisible = true
+        }
+        nothing_should_happen_when(function() draw(polygon) end)
     end)
 end)

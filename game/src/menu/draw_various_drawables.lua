@@ -1,6 +1,7 @@
 return function(graphics, fonts)
     local font
     return function(drawable)
+        if drawable and drawable.invisible then return end
         drawable = drawable or {}
         graphics.setColor(drawable.red or 0, drawable.green or 0, drawable.blue or 0, drawable.alpha or 100)
         if drawable.string then
