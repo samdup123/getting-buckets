@@ -133,6 +133,12 @@ function love.menu_event(event)
     menu_engine.pass_menu_state_event(event)
 end
 
+function love.keypressed(key, scancode, isrepeat)
+  if key == "escape" then
+     love.event.quit()
+  end
+end
+
 function love.game_play_event(event)
     local location = datamodel.read('current file location')
     current_user_code = require('user_code/' .. location)
