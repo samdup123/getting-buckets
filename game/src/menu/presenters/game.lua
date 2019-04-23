@@ -62,8 +62,6 @@ local win_text = {
     invisible = true
 }
 
-print('win rect', win_rectangle.x, win_rectangle.y)
-
 local play_back_button = button(game_rect.x + 350, game_rect.y + game_rect.height + 30)
 local step_back_button = button(play_back_button.x + play_back_button.width + 30, play_back_button.y)
 local pause_button = button(step_back_button.x + step_back_button.width + 30, play_back_button.y)
@@ -240,21 +238,7 @@ return function(release_event, datamodel, timer_dispensary)
     game_play_timer.stop()
 
     local datamodel_on_change_callback = function(label, data)
-        if label == 'current level environment' then
-            number_of_chutes = data.chutes.info().number_of_chutes
-            local length_of_chutes = data.chutes.info().length_of_chutes
-
-            local width_of_balls = chutes_rect.width / number_of_chutes
-
-            bucket_rect.width = width_of_balls
-            bucket_rect.height = width_of_balls
-
-            chutes_rect.height = game_rect.y + game_rect.height - 40 - width_of_balls
-            bucket_rect.y = chutes_rect.y + chutes_rect.height
-
-            ball_drop_ammount = chutes_rect.height / length_of_chutes
-            console_text.limit = console_rect.width - 10
-        elseif label == 'current game history' then
+        if label == 'current game history' then
             history = data
         elseif label == 'current mouse position' and should_update_time_between_frames_on_mouse_move then
             local pos = data
@@ -339,6 +323,21 @@ return function(release_event, datamodel, timer_dispensary)
       click_occurred = function(click)
           if click.type == 'press' then
               if check_click(compile_button, click) then
+                  local data = datamodel.read('current level environment')
+                  number_of_chutes = data.chutes.info().number_of_chutes
+                  local length_of_chutes = data.chutes.info().length_of_chutes
+
+                  local width_of_balls = chutes_rect.width / number_of_chutes
+
+                  bucket_rect.width = width_of_balls
+                  bucket_rect.height = width_of_balls
+
+                  chutes_rect.height = game_rect.y + game_rect.height - 40 - width_of_balls
+                  bucket_rect.y = chutes_rect.y + chutes_rect.height
+
+                  ball_drop_ammount = chutes_rect.height / length_of_chutes
+                  console_text.limit = console_rect.width - 10
+
                   current_frame = 1
                   game_play_timer.stop()
                   balls = {}

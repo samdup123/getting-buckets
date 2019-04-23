@@ -15,14 +15,19 @@ package.path = '/Users/samduplessis/APLACE/getting-buckets/game/src/?.lua;' .. p
 local main_font = love.graphics.newFont(24)
 local console_font = love.graphics.newFont(14)
 local draw = require'menu/draw_various_drawables'(love.graphics, {main_font = main_font, console_font = console_font})
-local datamodel = require'datamodel/volatile'(
+
+local levels = {
+    require'levels/random/environment',
+    require'levels/oscillating/environment',
+}
+
+local datamodel_vol = require'datamodel/volatile'(
   {
     {'current window size',
       {
         width = love.graphics.getWidth(),
         height = love.graphics.getHeight(),
       }},
-     'current level environment',
      'current user code',
      'current level number',
      'current game history',
@@ -34,6 +39,20 @@ local datamodel = require'datamodel/volatile'(
      'debounced current mouse position'
   }
 )
+
+local datamodel_indirect = require'datamodel/indirect'(
+    {
+        ['current level environment'] = {
+            read = function()
+                local index = datamodel_vol.read('current level number')
+                return levels[index]
+            end,
+            write = function() end
+        }
+    }
+)
+
+local datamodel = require'datamodel/combined'({datamodel_vol, datamodel_indirect})
 
 local file_manager = require'menu/file_manager'(working_directory .. '/user_code', datamodel)
 

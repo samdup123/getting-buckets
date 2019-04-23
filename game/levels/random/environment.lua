@@ -14,8 +14,8 @@ local random_func = function() return math.random(number_of_chutes) end
 local ball_dropper = Ball_Dropper(random_func, number_of_chutes, number_of_balls_that_will_fall, tocks_between_drops)
 local bucket = Bucket(number_of_chutes, starting_chute)
 
-    return {
-        ball_dropper = ball_dropper,
-        chutes = chutes,
-        bucket = bucket
-    }
+return {
+    ball_dropper = ball_dropper,
+    chutes = chutes,
+    bucket = bucket
+}
