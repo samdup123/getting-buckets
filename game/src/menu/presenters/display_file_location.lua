@@ -1,7 +1,7 @@
 local check_click = require'menu/check_click'
 local button_rectangle = {mode = 'fill', x = 200, y = 200, width = 100, height = 100, red = 100}
 local button_text = {string = 'done', font = 'main_font', x = 250, y = 250, blue = 100}
-local file_location_text = {font = 'main_font', x = 400, y = 100, red = 25, blue = 100}
+local file_location_text = {font = 'main_font', x = 600, y = 100, red = 25, blue = 100}
 
 return function(release_event, datamodel, file_manager)
 
