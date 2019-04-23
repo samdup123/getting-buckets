@@ -8,6 +8,15 @@ return function (menus)
     local fsm, state
 
     state = {
+        splash = {
+            entry = function()
+                current_menu = menus.splash
+            end,
+            job_complete = function()
+                fsm.transition(state.level_selection)
+            end
+        },
+
         level_selection = {
             entry = function()
                 current_menu = menus.level_selection
@@ -36,7 +45,7 @@ return function (menus)
         },
     }
 
-    fsm = Fsm(state.level_selection)
+    fsm = Fsm(state.splash)
 
     return {
         pass_menu_state_event = function(event) fsm.signal(event) end,

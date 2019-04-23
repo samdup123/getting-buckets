@@ -9,12 +9,13 @@ os_process_file = assert(io.popen('mkdir user_code'))
 os_process_file:close()
 
 -- set the package path to collect source code
-package.path = '/Users/samduplessis/APLACE/getting-buckets/?.lua;' .. package.path
-package.path = '/Users/samduplessis/APLACE/getting-buckets/game/src/?.lua;' .. package.path
+package.path = 'Users/ryanpetit/Dropbox/2019_SRING/550_CECS/getting-buckets/?.lua;' .. package.path
+package.path = 'Users/ryanpetit/Dropbox/2019_SRING/550_CECS/getting-buckets/game/src/?.lua;' .. package.path
 
 local main_font = love.graphics.newFont(24)
+local big_font = love.graphics.newFont(48)
 local console_font = love.graphics.newFont(14)
-local draw = require'menu/draw_various_drawables'(love.graphics, {main_font = main_font, console_font = console_font})
+local draw = require'menu/draw_various_drawables'(love.graphics, {main_font = main_font, console_font = console_font, big_font = big_font})
 local datamodel = require'datamodel/volatile'(
   {
     {'current window size',
@@ -48,6 +49,7 @@ local menu_engine = require'menu/engine'({
         function(...) love.event.push(...) end,
         datamodel,
         file_manager),
+    splash = require'menu/presenters/splash'(function(...) love.event.push(...) end, datamodel),
     level_selection = require'menu/presenters/level_selection'(function(...) love.event.push(...) end, datamodel),
     game = require'menu/presenters/game'(function(...) love.event.push(...) end, datamodel, timer_dispensary),
     null = require'menu/presenters/null'
