@@ -12,9 +12,16 @@ os_process_file:close()
 package.path = '/Users/samduplessis/APLACE/getting-buckets/?.lua;' .. package.path
 package.path = '/Users/samduplessis/APLACE/getting-buckets/game/src/?.lua;' .. package.path
 
-local main_font = love.graphics.newFont(24)
-local console_font = love.graphics.newFont(14)
-local draw = require'menu/draw_various_drawables'(love.graphics, {main_font = main_font, console_font = console_font})
+local images = {
+    logo = love.graphics.newImage('res/logo.png'),
+    background = love.graphics.newImage('res/background.png')
+}
+
+local draw = require'menu/draw_various_drawables'(love.graphics, {
+        main_font = love.graphics.newFont(24),
+        console_font = love.graphics.newFont(14),
+        big_font = love.graphics.newFont(34)
+    }, images)
 
 local levels = {
     require'levels/random/environment',
@@ -63,6 +70,7 @@ local Debouncer = require'utils/data_debouncer'
 Debouncer(datamodel, timer_dispensary, .1, 'current mouse position', 'debounced current mouse position')
 
 local menu_engine = require'menu/engine'({
+    splash = require'menu/presenters/splash'(function(...) love.event.push(...) end, datamodel),
     display_file_location = require'menu/presenters/display_file_location'(
         function(...) love.event.push(...) end,
         datamodel,
@@ -84,7 +92,6 @@ function love.load(arg)
   datamodel.write('current level environment', random_level_environment)
 end
 
-
 local time = 0
 local last_time = time
 function love.update(dt)
@@ -95,14 +102,22 @@ function love.update(dt)
     end
 end
 
+local clicked = false
+
 function love.draw()
-  local screen = menu_engine.get_current_screen()
-  for i,drawable in ipairs(screen.drawables) do
-      draw(drawable)
-  end
+    if clicked then
+        local screen = menu_engine.get_current_screen()
+        for i,drawable in ipairs(screen.drawables) do
+          draw(drawable)
+        end
+    else
+        love.graphics.draw(images.background, 0, 0)
+        love.graphics.draw(images.logo, 450, 25)
+    end
 end
 
 function love.mousepressed(x,y)
+    clicked = true
     menu_engine.pass_click_event({x = x, y = y, type = 'press'})
 end
 

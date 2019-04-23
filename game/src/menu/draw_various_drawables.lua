@@ -1,4 +1,4 @@
-return function(graphics, fonts)
+return function(graphics, fonts, images)
     local font
     return function(drawable)
         if drawable and drawable.invisible then return end
@@ -37,6 +37,9 @@ return function(graphics, fonts)
                 drawable.y2,
                 drawable.x3,
                 drawable.y3)
+        elseif drawable.image then
+            print(drawable.image)
+            graphics.draw(images[drawable.image], drawable.x, drawable.y)
         end
     end
 end
