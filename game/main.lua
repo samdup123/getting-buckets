@@ -93,6 +93,12 @@ function love.mousereleased(x,y)
     menu_engine.pass_click_event({x = x, y = y, type = 'release'})
 end
 
+function love.keypressed(key, scancode, isrepeat)
+  if key == "escape" then
+     love.event.quit()
+  end
+end
+
 function love.mousemoved(x, y, dx, dy)
     datamodel.write('current mouse position', {x = x, y = y})
 end

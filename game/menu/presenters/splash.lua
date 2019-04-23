@@ -10,16 +10,6 @@ local button_text = {
 local logo_text = {font = 'big_font', x = 700, y = 100, red = 25, blue = 100}
 
 return function(release_event, datamodel, file_manager)
-
-    local current_file_location
-    local function datamodel_on_change(label, data)
-        if label == 'current level number' then
-            local file_name = 'level' .. data
-            current_file_location = file_manager.open(file_name)
-            datamodel.write('current file location', file_name)
-        end
-    end
-
     datamodel.subscribe_to_on_change(datamodel_on_change)
 
     local function done_with_screen()
