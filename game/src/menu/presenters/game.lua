@@ -62,6 +62,7 @@ local win_text = {
     invisible = true
 }
 
+local return_button = button(game_rect.x + 220, game_rect.y + game_rect.height + 30)
 local play_back_button = button(game_rect.x + 350, game_rect.y + game_rect.height + 30)
 local step_back_button = button(play_back_button.x + play_back_button.width + 30, play_back_button.y)
 local pause_button = button(step_back_button.x + step_back_button.width + 30, play_back_button.y)
@@ -140,6 +141,13 @@ local compile_label = {
     font = 'main_font',
     x = center_x(compile_button),
     y = center_y(compile_button)
+}
+
+local return_label = {
+    string = 'return',
+    font = 'main_font',
+    x = center_x(return_button),
+    y = center_y(return_button)
 }
 
 local speed_bar = {
@@ -317,6 +325,8 @@ return function(release_event, datamodel, timer_dispensary)
               bucket_rect,
               win_rectangle,
               win_text,
+              return_button,
+              return_label,
               unpack(balls)
           }}
       end,
@@ -343,6 +353,8 @@ return function(release_event, datamodel, timer_dispensary)
                   balls = {}
                   click_release_callback_generator(compile_button)
                   release_event('game_play_event')
+              elseif check_click(return_button, click) then
+                  release_event('menu_event', 'job_complete')
               elseif check_click(play_button, click) then
                   click_release_callback_generator(play_button)
                   direction_of_movement = 1

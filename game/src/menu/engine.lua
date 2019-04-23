@@ -31,7 +31,7 @@ return function (menus)
                 current_menu = menus.game
             end,
             job_complete = function(data)
-                current_menu = menus.null
+                fsm.transition(state.level_selection)
             end,
         },
     }
